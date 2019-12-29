@@ -1,0 +1,21 @@
+{
+    "requests": [
+        {
+            "content": {
+                "id": "/subscriptions/1186543f-81e7-4a2c-ad55-fae1cc1c9eac/resourceGroups/Sentinel/providers/Microsoft.OperationalInsights/workspaces/sorisentinel/providers/Microsoft.SecurityInsights/alertRules/ac34c634-769e-44a3-9065-fbf399d80801",
+                "name": "ac34c634-769e-44a3-9065-fbf399d80801",
+                "type": "Microsoft.SecurityInsights/alertRules",
+                "kind": "Fusion",
+                "properties": {
+                    "enabled": true,
+                    "alertRuleTemplateName": "f71aba3d-28fb-450b-b192-4e76a83015c8"
+                }
+            },
+            "httpMethod": "PUT",
+            "requestHeaderDetails": {
+                "commandName": "Microsoft_Azure_Security_Insights."
+            },
+            "url": "https://management.azure.com/subscriptions/1186543f-81e7-4a2c-ad55-fae1cc1c9eac/resourceGroups/Sentinel/providers/Microsoft.OperationalInsights/workspaces/sorisentinel/providers/Microsoft.SecurityInsights/alertRules/ac34c634-769e-44a3-9065-fbf399d80801?api-version=2019-01-01-preview"
+        }
+    ]
+}
