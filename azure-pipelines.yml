@@ -42,8 +42,7 @@ stages:
       steps:
       - download: current
         artifact: RulesFile
-      - download: current
-        artifact: Scripts
+      - download: Scripts
       - task: AzurePowerShell@4
         displayName: 'Create and Update Alert Rules'
         inputs:
