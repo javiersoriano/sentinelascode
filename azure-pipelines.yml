@@ -3,21 +3,33 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
+name: build and deploy Alert Rules
+
 trigger:
 - master
 
-pool:
-  name: Azure Pipelines
-  vmImage: 'vs2017-win2016'
-steps:
-- task: CopyFiles@2
-  displayName: 'Copy Scripts'
-  inputs:
-    SourceFolder: Scripts
-    TargetFolder: '$(build.artifactstagingdirectory)'
+stages:
+- stage: Build Alert Rules
 
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact: Scripts'
-  inputs:
-    ArtifactName: Scripts
+  jobs:
+    - job: AgentJob
+      pool:
+       name: Azure Pipelines
+       vmImage: 'vs2017-win2016'
+      steps:
+       - task: CopyFiles@2
+         displayName: 'Copy Scripts'
+         inputs:
+          SourceFolder: Scripts
+          TargetFolder: '$(build.artifactstagingdirectory)'
+
+       - task: PublishBuildArtifacts@1
+         displayName: 'Publish Artifact: Scripts'
+         inputs:
+          ArtifactName: Scripts
+
+- stage: Deploy Alert Rules
+
+variables: 
+- group: Az connection settings
 
