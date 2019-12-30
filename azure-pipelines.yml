@@ -42,7 +42,12 @@ stages:
       steps:
       - download: current
         artifact: RulesFile
-      - download: Scripts
+      - task: DownloadPipelineArtifact@2
+        inputs:
+         source: specific
+         project: SentinelAsCode
+         pipeline: 'Build Scripts'
+         path: $(Pipeline.Workspace)
       - task: AzurePowerShell@4
         displayName: 'Create and Update Alert Rules'
         inputs:
