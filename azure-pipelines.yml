@@ -4,7 +4,9 @@
 # https://aka.ms/yaml
 
 name: build and deploy Alert Rules
-
+resources:
+ pipelines:
+   - pipeline: Scripts
 trigger:
 - master
 
@@ -37,10 +39,8 @@ stages:
       variables: 
       - group: Az connection settings
       steps:
-      - download:
-        artifact: RulesFile
-      - download:
-        artifact: Scripts
+      - download: RulesFile
+      - download: Scripts
       - task: AzurePowerShell@4
         displayName: 'Create and Update Alert Rules'
         inputs:
