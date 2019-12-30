@@ -1,14 +1,3 @@
-# Variables
-<# $config = Get-Content -Raw -Path ..\config.json | ConvertFrom-Json
-
-$TenantId = $config.tenantid
-$ClientId = $config.clientid
-$ClientSecret = $config.clientsecret
-$Resource = $config.resource
-$SubscriptionId = $config.subscriptionid
-$ResourceGroup = $config.resourcegroup
-$Workspace = $config.workspace #>
-
 param(
     [Parameter(Mandatory=$true)]$TenantId, 
     [Parameter(Mandatory=$true)]$ClientId,
@@ -18,6 +7,10 @@ param(
     [Parameter(Mandatory=$true)]$Workspace,
     [Parameter(Mandatory=$true)]$RulesFile
 )
+
+#Adding AzSentinel module
+Install-Module AzSentinel -Scope CurrentUser -Force
+Import-Module AzSentinel
 
 #Name of the Azure DevOps artifact
 $artifactName = "RulesFile"
