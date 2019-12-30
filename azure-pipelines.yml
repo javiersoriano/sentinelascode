@@ -45,7 +45,7 @@ stages:
       - task: DownloadPipelineArtifact@2
         inputs:
          source: specific
-         project: SentinelAsCode
+         project: 'SentinelAsCode'
          pipeline: 'Build Scripts'
          artifact: Scripts
          patterns: '**'
