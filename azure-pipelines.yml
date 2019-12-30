@@ -9,7 +9,7 @@ trigger:
 - master
 
 stages:
-- stage: Build Alert Rules
+- stage: build_alert_rules
 
   jobs:
     - job: AgentJob
@@ -28,7 +28,7 @@ stages:
          inputs:
           ArtifactName: Scripts
 
-- stage: Deploy Alert Rules
+- stage: deploy_alert_rules
 
 variables: 
 - group: Az connection settings
