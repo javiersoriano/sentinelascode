@@ -20,6 +20,12 @@ param(
 )
 
 Write-Host "The rules file is here: $RulesFile"
+$buildId = [System.Environment]::GetEnvironmentVariable("Release_Artifacts_$($artifactAlias)_BuildId");
+
+Write-Host "ArtifactsDirectory: $($env:System_ArtifactsDirectory) - BuildId: $BuildId"
+
+$path1= Join-Path $env:System_ArtifactsDirectory $artifactAlias;
+Write-Host "Path1 : $path1"
 
 $Resource = "https://management.azure.com/"
 
