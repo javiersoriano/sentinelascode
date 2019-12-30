@@ -40,8 +40,10 @@ stages:
       variables: 
       - group: Az connection settings
       steps:
-      - download: RulesFile
-      - download: Scripts
+      - download: current
+        artifact: RulesFile
+      - download: current
+        artifact: Scripts
       - task: AzurePowerShell@4
         displayName: 'Create and Update Alert Rules'
         inputs:
