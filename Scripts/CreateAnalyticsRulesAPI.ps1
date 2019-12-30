@@ -15,8 +15,11 @@ param(
     [Parameter(Mandatory=$true)]$ClientSecret,
     [Parameter(Mandatory=$true)]$SubscriptionId, 
     [Parameter(Mandatory=$true)]$ResourceGroup,
-    [Parameter(Mandatory=$true)]$Workspace
+    [Parameter(Mandatory=$true)]$Workspace,
+    [Parameter(Mandatory=$true)]$RulesFile
 )
+
+Write-Host "The rules file is here: $RulesFile"
 
 $Resource = "https://management.azure.com/"
 
@@ -40,7 +43,7 @@ $Headers.Add("Authorization","$($Token.token_type) "+ " " + "$($Token.access_tok
 $Headers.Add("Content-Type", "application/json")
 
 #Getting all rules from config file
-$rules = Get-Content -Raw -Path ..\AnalyticsRules\analytics-rules.json | ConvertFrom-Json
+$rules = Get-Content -Raw -Path $RulesFile | ConvertFrom-Json
 
 foreach ($rule in $rules.analytics) {
     Write-Host "Processing alert rule: " -NoNewline 
