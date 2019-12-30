@@ -18,15 +18,15 @@ stages:
        vmImage: 'vs2017-win2016'
       steps:
        - task: CopyFiles@2
-         displayName: 'Copy Scripts'
+         displayName: 'Copy Alert Rules'
          inputs:
-          SourceFolder: Scripts
+          SourceFolder: AnalyticsRules
           TargetFolder: '$(build.artifactstagingdirectory)'
 
        - task: PublishBuildArtifacts@1
-         displayName: 'Publish Artifact: Scripts'
+         displayName: 'Publish Artifact: RulesFile'
          inputs:
-          ArtifactName: Scripts
+          ArtifactName: RulesFile
 
 - stage: deploy_alert_rules
 
