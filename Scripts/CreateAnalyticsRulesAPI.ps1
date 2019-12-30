@@ -24,7 +24,7 @@ $buildId = [System.Environment]::GetEnvironmentVariable("Release_Artifacts_$($Ru
 
 Write-Host "ArtifactsDirectory: $($env:System_ArtifactsDirectory) - BuildId: $BuildId"
 
-$path1= Join-Path $env:System_ArtifactsDirectory $artifactAlias;
+$path1= Join-Path $env:System_ArtifactsDirectory $RulesFile;
 Write-Host "Path1 : $path1"
 
 $Resource = "https://management.azure.com/"
@@ -49,7 +49,7 @@ $Headers.Add("Authorization","$($Token.token_type) "+ " " + "$($Token.access_tok
 $Headers.Add("Content-Type", "application/json")
 
 #Getting all rules from config file
-$rules = Get-Content -Raw -Path $RulesFile | ConvertFrom-Json
+$rules = Get-Content -Raw -Path $path1 | ConvertFrom-Json
 
 foreach ($rule in $rules.analytics) {
     Write-Host "Processing alert rule: " -NoNewline 
