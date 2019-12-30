@@ -19,22 +19,17 @@ param(
     [Parameter(Mandatory=$true)]$RulesFile
 )
 
+#Name of the Azure DevOps artifact
 $artifactName = "RulesFile"
-Write-Host "The rules file is here: $RulesFile"
-$buildId = [System.Environment]::GetEnvironmentVariable("Release_Artifacts_$($RulesFile)_BuildId");
 
-Write-Host "ArtifactsDirectory: $($env:System_ArtifactsDirectory) - BuildId: $BuildId"
+#Build the full path for the analytics rule file
+$artifactPath = Join-Path $env:System_ArtifactsDirectory $artifactName $artifactName
+$rulesFilePath = Join-Path $artifactPath $RulesFile
 
-$files = Get-ChildItem -Path $env:System_ArtifactsDirectory -Recurse
-
-Write-Host $files
-
-$path1 = Join-Path $env:System_ArtifactsDirectory $artifactName;
-Write-Host "Path1 : $path1"
-$path2 = Join-Path $path1 $RulesFile
-
+#Resource URL to authentincate against
 $Resource = "https://management.azure.com/"
 
+#Urls to be used for Sentinel API calls
 $IdUrl = "/subscriptions/$SubscriptionId/resourceGroups/$ResourceGroup/providers/Microsoft.OperationalInsights/workspaces/$Workspace"
 
 $baseUri = "https://management.azure.com/subscriptions/$SubscriptionId/resourceGroups/$ResourceGroup/providers/Microsoft.OperationalInsights/workspaces/$Workspace"
@@ -55,7 +50,7 @@ $Headers.Add("Authorization","$($Token.token_type) "+ " " + "$($Token.access_tok
 $Headers.Add("Content-Type", "application/json")
 
 #Getting all rules from config file
-$rules = Get-Content -Raw -Path $path2 | ConvertFrom-Json
+$rules = Get-Content -Raw -Path $rulesFilePath | ConvertFrom-Json
 
 foreach ($rule in $rules.analytics) {
     Write-Host "Processing alert rule: " -NoNewline 
