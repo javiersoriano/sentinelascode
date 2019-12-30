@@ -1,5 +1,5 @@
 # Variables
-$config = Get-Content -Raw -Path ..\config.json | ConvertFrom-Json
+<# $config = Get-Content -Raw -Path ..\config.json | ConvertFrom-Json
 
 $TenantId = $config.tenantid
 $ClientId = $config.clientid
@@ -7,7 +7,18 @@ $ClientSecret = $config.clientsecret
 $Resource = $config.resource
 $SubscriptionId = $config.subscriptionid
 $ResourceGroup = $config.resourcegroup
-$Workspace = $config.workspace
+$Workspace = $config.workspace #>
+
+param(
+    [Parameter(Mandatory=$true)]$TenantId, 
+    [Parameter(Mandatory=$true)]$ClientId,
+    [Parameter(Mandatory=$true)]$ClientSecret,
+    [Parameter(Mandatory=$true)]$SubscriptionId, 
+    [Parameter(Mandatory=$true)]$ResourceGroup,
+    [Parameter(Mandatory=$true)]$Workspace
+)
+
+$Resource = "https://management.azure.com/"
 
 $IdUrl = "/subscriptions/$SubscriptionId/resourceGroups/$ResourceGroup/providers/Microsoft.OperationalInsights/workspaces/$Workspace"
 
