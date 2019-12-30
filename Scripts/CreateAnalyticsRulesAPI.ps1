@@ -20,7 +20,7 @@ param(
 )
 
 Write-Host "The rules file is here: $RulesFile"
-$buildId = [System.Environment]::GetEnvironmentVariable("Release_Artifacts_$($artifactAlias)_BuildId");
+$buildId = [System.Environment]::GetEnvironmentVariable("Release_Artifacts_$($RulesFile)_BuildId");
 
 Write-Host "ArtifactsDirectory: $($env:System_ArtifactsDirectory) - BuildId: $BuildId"
 
