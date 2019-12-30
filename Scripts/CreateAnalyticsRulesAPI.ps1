@@ -42,7 +42,7 @@ $Headers.Add("Authorization","$($Token.token_type) "+ " " + "$($Token.access_tok
 
 $Headers.Add("Content-Type", "application/json")
 
-#Getting all rules from config file
+#Getting all rules from file
 $rules = Get-Content -Raw -Path $rulesFilePath | ConvertFrom-Json
 
 foreach ($rule in $rules.analytics) {
