@@ -25,6 +25,10 @@ $buildId = [System.Environment]::GetEnvironmentVariable("Release_Artifacts_$($Ru
 
 Write-Host "ArtifactsDirectory: $($env:System_ArtifactsDirectory) - BuildId: $BuildId"
 
+$files = Get-ChildItem -Path $env:System_ArtifactsDirectory -Recurse
+
+Write-Host $files
+
 $path1 = Join-Path $env:System_ArtifactsDirectory $artifactName;
 Write-Host "Path1 : $path1"
 $path2 = Join-Path $path1 $RulesFile
