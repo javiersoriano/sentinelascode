@@ -47,10 +47,6 @@ stages:
         artifact: RulesFile
       - download: Scripts
         patterns: '*.ps1'
-      - task: CmdLine@2
-        inputs:
-         script: 'dir /s'
-         workingDirectory: $(Pipeline.Workspace)
       - task: AzurePowerShell@4
         displayName: 'Create and Update Alert Rules'
         inputs:
