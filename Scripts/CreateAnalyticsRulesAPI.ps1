@@ -16,7 +16,7 @@ Import-Module AzSentinel
 $artifactName = "RulesFile"
 
 #Build the full path for the analytics rule file
-$artifactPath = Join-Path $env:Build.SourcesDirectory $artifactName 
+$artifactPath = Join-Path $env:Build_SourcesDirectory $artifactName 
 $rulesFilePath = Join-Path $artifactPath $RulesFile
 
 #Resource URL to authentincate against
