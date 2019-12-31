@@ -42,13 +42,9 @@ stages:
       steps:
       - download: current
         artifact: RulesFile
-      - task: DownloadPipelineArtifact@2
-        inputs:
-         source: specific
-         pipeline: $(RELEASE_ARTIFACTS_Scripts_BUILDID)
-         artifact: Scripts
-         patterns: '**'
-         path: $(Pipeline.Workspace)
+      - download: specific
+        artifact: Scripts
+        patterns: '*.ps1'
       - task: AzurePowerShell@4
         displayName: 'Create and Update Alert Rules'
         inputs:
