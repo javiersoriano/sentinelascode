@@ -26,11 +26,12 @@ stages:
          displayName: 'Copy Alert Rules'
          inputs:
           SourceFolder: AnalyticsRules
-          TargetFolder: '$(build.artifactstagingdirectory)'
+          TargetFolder: '$(Pipeline.Workspace)'
 
        - task: PublishBuildArtifacts@1
          displayName: 'Publish Artifact: RulesFile'
          inputs:
+          PathtoPublish: '$(Pipeline.Workspace)'
           ArtifactName: RulesFile
 
 - stage: deploy_alert_rules
@@ -48,12 +49,13 @@ stages:
         patterns: '*.ps1'
       - task: CmdLine@2
         inputs:
-         script: 'dir /s' 
+         script: 'dir /s'
+         workingDirectory: $(Pipeline.Workspace)
       - task: AzurePowerShell@4
         displayName: 'Create and Update Alert Rules'
         inputs:
          azureSubscription: 'Soricloud Visual Studio (1186543f-81e7-4a2c-ad55-fae1cc1c9eac)'
-         ScriptPath: '$(Build.SourcesDirectory)/Scripts/CreateAnalyticsRulesAPI.ps1'
+         ScriptPath: '$(Pipeline.Workspace)/Scripts/Scripts/CreateAnalyticsRulesAPI.ps1'
          ScriptArguments: '-TenantId $(TenantId) -ClientId $(ClientId) -ClientSecret $(ClientSecret) -SubscriptionId $(SubscriptionId) -ResourceGroup $(ResourceGroup) -Workspace $(Workspace) -RulesFile analytics-rules.json'
          azurePowerShellVersion: LatestVersion
          pwsh: true
