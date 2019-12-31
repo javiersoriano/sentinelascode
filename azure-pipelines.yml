@@ -43,7 +43,7 @@ stages:
       - download: current
         artifact: RulesFile
       - download: Scripts
-        patterns: '*.ps1'
+        patterns: '**/*.ps1'
       - task: AzurePowerShell@4
         displayName: 'Create and Update Alert Rules'
         inputs:
