@@ -31,6 +31,7 @@ stages:
        - task: PublishBuildArtifacts@1
          displayName: 'Publish Artifact: RulesFile'
          inputs:
+          PathtoPublish: '$(Pipeline.Workspace)'
           ArtifactName: RulesFile
 
 - stage: deploy_alert_rules
