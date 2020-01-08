@@ -8,7 +8,7 @@ The project has several folders for each of the different Sentinel components th
 
 ## Scripts
 
-Scripts that are used inside the Az DevOps pipelines to automate the deployment of the different Sentinel components
+Scripts that are used inside the Azure DevOps pipelines to automate the deployment of the different Sentinel components
 
 ## Pipelines
 

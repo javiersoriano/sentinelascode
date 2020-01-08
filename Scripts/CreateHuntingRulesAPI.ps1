@@ -11,7 +11,7 @@ Import-Module AzSentinel
 $artifactName = "HuntingRulesFile"
 
 #Build the full path for the hunting rules file
-$artifactPath = Join-Path $env:System_ArtifactsDirectory $artifactName $artifactName
+$artifactPath = Join-Path $env:Pipeline_Workspace $artifactName 
 $rulesFilePath = Join-Path $artifactPath $RulesFile
 
 #Getting all hunting rules from file
