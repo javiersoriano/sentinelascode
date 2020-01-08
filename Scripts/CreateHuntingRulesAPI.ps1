@@ -8,7 +8,7 @@ Install-Module AzSentinel -Scope CurrentUser -Force
 Import-Module AzSentinel
 
 #Name of the Azure DevOps artifact
-$artifactName = "HuntingRulesFile"
+$artifactName = "HuntingFile"
 
 #Build the full path for the hunting rules file
 $artifactPath = Join-Path $env:Pipeline_Workspace $artifactName 
