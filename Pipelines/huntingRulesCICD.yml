@@ -1,0 +1,58 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+name: build and deploy Hunting Rules
+resources:
+ pipelines:
+   - pipeline: Scripts
+     source: 'Build Scripts'
+trigger:
+ paths:
+   include:
+     - AnalyticsRules/*
+
+stages:
+- stage: build_hunting_rules
+
+  jobs:
+    - job: AgentJob
+      pool:
+       name: Azure Pipelines
+       vmImage: 'vs2017-win2016'
+      steps:
+       - task: CopyFiles@2
+         displayName: 'Copy Hunting Rules'
+         inputs:
+          SourceFolder: HuntingRules
+          TargetFolder: '$(Pipeline.Workspace)'
+
+       - task: PublishBuildArtifacts@1
+         displayName: 'Publish Artifact: HuntingFile'
+         inputs:
+          PathtoPublish: '$(Pipeline.Workspace)'
+          ArtifactName: HuntingFile
+
+- stage: deploy_hunting_rules
+  jobs:
+    - job: AgentJob
+      pool:
+       name: Azure Pipelines
+       vmImage: 'windows-2019'
+      variables: 
+      - group: Az connection settings
+      steps:
+      - download: current
+        artifact: HuntingFile
+      - download: Scripts
+        patterns: '*.ps1'
+      - task: AzurePowerShell@4
+        displayName: 'Create and Update Hunting Rules'
+        inputs:
+         azureSubscription: 'Soricloud Visual Studio'
+         ScriptPath: '$(Pipeline.Workspace)/Scripts/Scripts/CreateHuntingRulesAPI.ps1'
+         ScriptArguments: '-Workspace $(Workspace) -RulesFile hunting-rules.json'
+         azurePowerShellVersion: LatestVersion
+         pwsh: true
+
