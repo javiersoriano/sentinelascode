@@ -1,101 +1,103 @@
 {
-    "version": "Notebook/1.0",
-    "items": [
-      {
-        "type": 1,
-        "content": {
-          "json": "# Security Alerts multitenant dashboard"
-        },
-        "name": "text - 0"
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 1,
+      "content": {
+        "json": "# Security Alerts multitenant dashboard"
       },
-      {
-        "type": 9,
-        "content": {
-          "version": "KqlParameterItem/1.0",
-          "crossComponentResources": [
-            "value::all"
-          ],
-          "parameters": [
-            {
-              "id": "92e95a8e-625d-46a5-99b0-377de489ac98",
-              "version": "KqlParameterItem/1.0",
-              "name": "Tenant",
-              "type": 2,
-              "isRequired": true,
-              "query": "Resources \r\n| distinct tenantId",
-              "crossComponentResources": [
-                "value::all"
-              ],
-              "value": "72f988bf-86f1-41af-91ab-2d7cd011db47",
-              "typeSettings": {
-                "additionalResourceOptions": [
-                  "value::1"
-                ]
-              },
-              "queryType": 1,
-              "resourceType": "microsoft.resourcegraph/resources"
+      "name": "text - 0"
+    },
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "crossComponentResources": [
+          "{Subscription}"
+        ],
+        "parameters": [
+          {
+            "id": "92e95a8e-625d-46a5-99b0-377de489ac98",
+            "version": "KqlParameterItem/1.0",
+            "name": "Tenant",
+            "type": 2,
+            "isRequired": true,
+            "query": "Resources \r\n| distinct tenantId",
+            "crossComponentResources": [
+              "value::all"
+            ],
+            "value": "4b2462a4-bbee-495a-a0e1-f23ae524cc9c",
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::1"
+              ]
             },
-            {
-              "id": "dd3214bb-bcb8-4350-9628-b7aafb1055ee",
-              "version": "KqlParameterItem/1.0",
-              "name": "Subscription",
-              "type": 6,
-              "isRequired": true,
-              "query": "resourcecontainers | where type == \"microsoft.resources/subscriptions\" and tenantId == \"{Tenant}\" | project id",
-              "crossComponentResources": [
-                "value::all"
-              ],
-              "value": null,
-              "typeSettings": {
-                "additionalResourceOptions": []
-              },
-              "queryType": 1,
-              "resourceType": "microsoft.resourcegraph/resources"
-            },
-            {
-              "id": "4a8a5f96-02a8-427e-af4b-5370a362c8d9",
-              "version": "KqlParameterItem/1.0",
-              "name": "Workspace",
-              "type": 5,
-              "isRequired": true,
-              "multiSelect": true,
-              "quote": "'",
-              "delimiter": ",",
-              "query": "resources | where type =~ 'Microsoft.OperationalInsights/workspaces' | project name",
-              "crossComponentResources": [
-                "{Subscription}"
-              ],
-              "value": [],
-              "typeSettings": {
-                "additionalResourceOptions": []
-              },
-              "queryType": 1,
-              "resourceType": "microsoft.resourcegraph/resources"
-            }
-          ],
-          "style": "pills",
-          "queryType": 1,
-          "resourceType": "microsoft.resourcegraph/resources"
-        },
-        "name": "parameters - 1"
-      },
-      {
-        "type": 3,
-        "content": {
-          "version": "KqlItem/1.0",
-          "query": "SecurityAlert | project TimeGenerated, AlertName, AlertSeverity, Description, TenantId",
-          "size": 0,
-          "timeContext": {
-            "durationMs": 86400000
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
           },
-          "queryType": 0,
-          "resourceType": "microsoft.operationalinsights/workspaces",
-          "crossComponentResources": [
-            "/subscriptions/44e4eff8-1fcb-4a22-a7d6-992ac7286382/resourceGroups/SOC/providers/Microsoft.OperationalInsights/workspaces/CyberSecurityDemo"
-          ]
+          {
+            "id": "dd3214bb-bcb8-4350-9628-b7aafb1055ee",
+            "version": "KqlParameterItem/1.0",
+            "name": "Subscription",
+            "type": 6,
+            "isRequired": true,
+            "query": "resourcecontainers | where type == \"microsoft.resources/subscriptions\" and tenantId == \"{Tenant}\" | project id",
+            "crossComponentResources": [
+              "value::all"
+            ],
+            "value": "/subscriptions/44e4eff8-1fcb-4a22-a7d6-992ac7286382",
+            "typeSettings": {
+              "additionalResourceOptions": []
+            },
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "4a8a5f96-02a8-427e-af4b-5370a362c8d9",
+            "version": "KqlParameterItem/1.0",
+            "name": "Workspace",
+            "type": 5,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "resources | where type =~ 'Microsoft.OperationalInsights/workspaces' | project id",
+            "crossComponentResources": [
+              "{Subscription}"
+            ],
+            "value": [
+              "/subscriptions/44e4eff8-1fcb-4a22-a7d6-992ac7286382/resourceGroups/SOC/providers/Microsoft.OperationalInsights/workspaces/CyberSecurityDemo"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": []
+            },
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          }
+        ],
+        "style": "pills",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources"
+      },
+      "name": "parameters - 1"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "SecurityAlert | project TimeGenerated, AlertName, AlertSeverity, Description, TenantId",
+        "size": 0,
+        "timeContext": {
+          "durationMs": 86400000
         },
-        "name": "query - 2"
-      }
-    ],
-    "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
-  }
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{Workspace}"
+        ]
+      },
+      "name": "query - 2"
+    }
+  ],
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}
