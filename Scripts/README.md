@@ -12,3 +12,4 @@ This script reads the config file in the AnalyticsRules folder and deploys its c
 
 This script reads the config file in the HuntingRules folder and deploys its contents to a specific environment. The script will detect if the hunting rule is brand new and needs to be created or if it's already active and just needs to be updated.
 
+`CreateHuntingRulesAPI.ps1 -Workspace <String> -RulesFile <String>`

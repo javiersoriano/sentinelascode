@@ -1,103 +1,57 @@
 {
-  "version": "Notebook/1.0",
-  "items": [
-    {
-      "type": 1,
-      "content": {
-        "json": "# Security Alerts multitenant dashboard"
-      },
-      "name": "text - 0"
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "workbookDisplayName": {
+      "type": "string",
+      "defaultValue": "Security Alerts multi-tenant",
+      "metadata": {
+        "description": "The friendly name for the workbook that is used in the Gallery or Saved List.  This name must be unique within a resource group."
+      }
     },
-    {
-      "type": 9,
-      "content": {
-        "version": "KqlParameterItem/1.0",
-        "crossComponentResources": [
-          "{Subscription}"
-        ],
-        "parameters": [
-          {
-            "id": "92e95a8e-625d-46a5-99b0-377de489ac98",
-            "version": "KqlParameterItem/1.0",
-            "name": "Tenant",
-            "type": 2,
-            "isRequired": true,
-            "query": "Resources \r\n| distinct tenantId",
-            "crossComponentResources": [
-              "value::all"
-            ],
-            "value": "4b2462a4-bbee-495a-a0e1-f23ae524cc9c",
-            "typeSettings": {
-              "additionalResourceOptions": [
-                "value::1"
-              ]
-            },
-            "queryType": 1,
-            "resourceType": "microsoft.resourcegraph/resources"
-          },
-          {
-            "id": "dd3214bb-bcb8-4350-9628-b7aafb1055ee",
-            "version": "KqlParameterItem/1.0",
-            "name": "Subscription",
-            "type": 6,
-            "isRequired": true,
-            "query": "resourcecontainers | where type == \"microsoft.resources/subscriptions\" and tenantId == \"{Tenant}\" | project id",
-            "crossComponentResources": [
-              "value::all"
-            ],
-            "value": "/subscriptions/44e4eff8-1fcb-4a22-a7d6-992ac7286382",
-            "typeSettings": {
-              "additionalResourceOptions": []
-            },
-            "queryType": 1,
-            "resourceType": "microsoft.resourcegraph/resources"
-          },
-          {
-            "id": "4a8a5f96-02a8-427e-af4b-5370a362c8d9",
-            "version": "KqlParameterItem/1.0",
-            "name": "Workspace",
-            "type": 5,
-            "isRequired": true,
-            "multiSelect": true,
-            "quote": "'",
-            "delimiter": ",",
-            "query": "resources | where type =~ 'Microsoft.OperationalInsights/workspaces' | project id",
-            "crossComponentResources": [
-              "{Subscription}"
-            ],
-            "value": [
-              "/subscriptions/44e4eff8-1fcb-4a22-a7d6-992ac7286382/resourceGroups/SOC/providers/Microsoft.OperationalInsights/workspaces/CyberSecurityDemo"
-            ],
-            "typeSettings": {
-              "additionalResourceOptions": []
-            },
-            "queryType": 1,
-            "resourceType": "microsoft.resourcegraph/resources"
-          }
-        ],
-        "style": "pills",
-        "queryType": 1,
-        "resourceType": "microsoft.resourcegraph/resources"
-      },
-      "name": "parameters - 1"
+    "workbookType": {
+      "type": "string",
+      "defaultValue": "workbook",
+      "metadata": {
+        "description": "The gallery that the workbook will been shown under. Supported values include workbook, tsg, etc. Usually, this is 'workbook'"
+      }
     },
+    "workbookSourceId": {
+      "type": "string",
+      "defaultValue": "sentinel",
+      "metadata": {
+        "description": "The id of resource instance to which the workbook will be associated"
+      }
+    },
+    "workbookId": {
+      "type": "string",
+      "defaultValue": "[newGuid()]",
+      "metadata": {
+        "description": "The unique guid for this workbook instance"
+      }
+    }
+  },
+  "resources": [
     {
-      "type": 3,
-      "content": {
-        "version": "KqlItem/1.0",
-        "query": "SecurityAlert | project TimeGenerated, AlertName, AlertSeverity, Description, TenantId",
-        "size": 0,
-        "timeContext": {
-          "durationMs": 86400000
-        },
-        "queryType": 0,
-        "resourceType": "microsoft.operationalinsights/workspaces",
-        "crossComponentResources": [
-          "{Workspace}"
-        ]
-      },
-      "name": "query - 2"
+      "name": "[parameters('workbookId')]",
+      "type": "microsoft.insights/workbooks",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2018-06-17-preview",
+      "dependsOn": [],
+      "kind": "shared",
+      "properties": {
+        "displayName": "[parameters('workbookDisplayName')]",
+        "serializedData": "{\"version\":\"Notebook/1.0\",\"items\":[{\"type\":1,\"content\":\"{\\\"json\\\":\\\"# Security Alerts multitenant dashboard\\\"}\",\"name\":\"text - 0\"},{\"type\":9,\"content\":\"{\\\"version\\\":\\\"KqlParameterItem/1.0\\\",\\\"crossComponentResources\\\":[\\\"{Subscription}\\\"],\\\"parameters\\\":[{\\\"id\\\":\\\"92e95a8e-625d-46a5-99b0-377de489ac98\\\",\\\"version\\\":\\\"KqlParameterItem/1.0\\\",\\\"name\\\":\\\"Tenant\\\",\\\"type\\\":2,\\\"isRequired\\\":true,\\\"query\\\":\\\"Resources \\\\r\\\\n| distinct tenantId\\\",\\\"crossComponentResources\\\":[\\\"value::all\\\"],\\\"value\\\":\\\"4b2462a4-bbee-495a-a0e1-f23ae524cc9c\\\",\\\"typeSettings\\\":{\\\"additionalResourceOptions\\\":[\\\"value::1\\\"]},\\\"queryType\\\":1,\\\"resourceType\\\":\\\"microsoft.resourcegraph/resources\\\"},{\\\"id\\\":\\\"dd3214bb-bcb8-4350-9628-b7aafb1055ee\\\",\\\"version\\\":\\\"KqlParameterItem/1.0\\\",\\\"name\\\":\\\"Subscription\\\",\\\"type\\\":6,\\\"isRequired\\\":true,\\\"query\\\":\\\"resourcecontainers | where type == \\\\\\\"microsoft.resources/subscriptions\\\\\\\" and tenantId == \\\\\\\"{Tenant}\\\\\\\" | project id\\\",\\\"crossComponentResources\\\":[\\\"value::all\\\"],\\\"value\\\":\\\"/subscriptions/44e4eff8-1fcb-4a22-a7d6-992ac7286382\\\",\\\"typeSettings\\\":{\\\"additionalResourceOptions\\\":[]},\\\"queryType\\\":1,\\\"resourceType\\\":\\\"microsoft.resourcegraph/resources\\\"},{\\\"id\\\":\\\"4a8a5f96-02a8-427e-af4b-5370a362c8d9\\\",\\\"version\\\":\\\"KqlParameterItem/1.0\\\",\\\"name\\\":\\\"Workspace\\\",\\\"type\\\":5,\\\"isRequired\\\":true,\\\"multiSelect\\\":true,\\\"quote\\\":\\\"'\\\",\\\"delimiter\\\":\\\",\\\",\\\"query\\\":\\\"resources | where type =~ 'Microsoft.OperationalInsights/workspaces' | project id\\\",\\\"crossComponentResources\\\":[\\\"{Subscription}\\\"],\\\"value\\\":[\\\"/subscriptions/44e4eff8-1fcb-4a22-a7d6-992ac7286382/resourceGroups/SOC/providers/Microsoft.OperationalInsights/workspaces/CyberSecurityDemo\\\"],\\\"typeSettings\\\":{\\\"additionalResourceOptions\\\":[]},\\\"queryType\\\":1,\\\"resourceType\\\":\\\"microsoft.resourcegraph/resources\\\"}],\\\"style\\\":\\\"pills\\\",\\\"queryType\\\":1,\\\"resourceType\\\":\\\"microsoft.resourcegraph/resources\\\"}\",\"name\":\"parameters - 1\"},{\"type\":3,\"content\":\"{\\\"version\\\":\\\"KqlItem/1.0\\\",\\\"query\\\":\\\"SecurityAlert | project TimeGenerated, AlertName, AlertSeverity, Description, TenantId\\\",\\\"size\\\":0,\\\"timeContext\\\":{\\\"durationMs\\\":86400000},\\\"queryType\\\":0,\\\"resourceType\\\":\\\"microsoft.operationalinsights/workspaces\\\",\\\"crossComponentResources\\\":[\\\"{Workspace}\\\"]}\",\"name\":\"query - 2\"}],\"isLocked\":false}",
+        "version": "1.0",
+        "sourceId": "[parameters('workbookSourceId')]",
+        "category": "[parameters('workbookType')]"
+      }
     }
   ],
-  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+  "outputs": {
+    "workbookId": {
+      "type": "string",
+      "value": "[resourceId( 'microsoft.insights/workbooks', parameters('workbookId'))]"
+    }
+  },
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#"
 }
