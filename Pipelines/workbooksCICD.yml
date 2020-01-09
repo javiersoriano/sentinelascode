@@ -42,13 +42,11 @@ stages:
       steps:
       - download: current
         artifact: Workbooks
-      - download: Scripts
-        patterns: '*.ps1'
       - task: AzureResourceGroupDeployment@2
         displayName: 'Deploy Workbooks'
         inputs:
           azureSubscription: 'Soricloud Visual Studio'
-          resourceGroupName: Sentinel
+          resourceGroupName: $(Workspace)
           location: 'West Europe'
           templateLocation: 'Linked artifact'
           csmFile: '$(Pipeline.Workspace)/Workbooks/Workbooks/multi-tenant-incidents.json'
