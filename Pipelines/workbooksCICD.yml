@@ -46,7 +46,7 @@ stages:
         displayName: 'Deploy Workbooks'
         inputs:
           azureSubscription: 'Soricloud Visual Studio'
-          resourceGroupName: $(Workspace)
+          resourceGroupName: '$(Workspace)'
           location: 'West Europe'
           templateLocation: 'Linked artifact'
           csmFile: '$(Pipeline.Workspace)/Workbooks/Workbooks/multi-tenant-incidents.json'
