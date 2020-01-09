@@ -52,6 +52,6 @@ stages:
           resourceGroupName: '$(Workspace)'
           location: 'West Europe'
           templateLocation: 'Linked artifact'
-          csmFile: '$(Pipeline.Workspace)/Workbooks/Workbooks/multi-tenant-incidents.json'
+          csmFile: '$(Pipeline.Workspace)/Workbooks/multi-tenant-incidents.json'
 
 
