@@ -53,5 +53,6 @@ stages:
           location: 'West Europe'
           templateLocation: 'Linked artifact'
           csmFile: '$(Pipeline.Workspace)/Workbooks/multi-tenant-incidents.json'
+          overrideParameters: '-workbookSourceId $(WorkbookSourceId)'
 
 
