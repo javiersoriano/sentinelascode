@@ -1,0 +1,57 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+name: build and deploy Workbooks
+
+trigger:
+ paths:
+   include:
+     - Workbooks/*
+
+stages:
+- stage: build_workbooks
+
+  jobs:
+    - job: AgentJob
+      pool:
+       name: Azure Pipelines
+       vmImage: 'vs2017-win2016'
+      steps:
+       - task: CopyFiles@2
+         displayName: 'Copy Workbooks'
+         inputs:
+          SourceFolder: Workbooks
+          TargetFolder: '$(Pipeline.Workspace)'
+
+       - task: PublishBuildArtifacts@1
+         displayName: 'Publish Artifact: Workbooks'
+         inputs:
+          PathtoPublish: '$(Pipeline.Workspace)'
+          ArtifactName: Workbooks
+
+- stage: deploy_workbooks
+  jobs:
+    - job: AgentJob
+      pool:
+       name: Azure Pipelines
+       vmImage: 'windows-2019'
+      variables: 
+      - group: Az connection settings
+      steps:
+      - download: current
+        artifact: Workbooks
+      - task: CmdLine@2
+        inputs:
+         script: 'dir /s' 
+      - task: AzureResourceGroupDeployment@2
+        displayName: 'Deploy Workbooks'
+        inputs:
+          azureSubscription: 'Soricloud Visual Studio'
+          resourceGroupName: '$(ResourceGroup)'
+          location: 'West Europe'
+          templateLocation: 'Linked artifact'
+          csmFile: '$(Pipeline.Workspace)/Workbooks/multi-tenant-incidents.json'
+
+
