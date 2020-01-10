@@ -10,14 +10,14 @@
     },
     "workbookType": {
       "type": "string",
-      "defaultValue": "workbook",
+      "defaultValue": "sentinel",
       "metadata": {
         "description": "The gallery that the workbook will been shown under. Supported values include workbook, tsg, etc. Usually, this is 'workbook'"
       }
     },
     "workbookSourceId": {
       "type": "string",
-      "defaultValue": "sentinel",
+      "defaultValue": "/subscriptions/1186543f-81e7-4a2c-ad55-fae1cc1c9eac/resourcegroups/sentinel/providers/microsoft.operationalinsights/workspaces/sorisentinel",
       "metadata": {
         "description": "The id of resource instance to which the workbook will be associated"
       }
@@ -33,7 +33,7 @@
   "resources": [
     {
       "name": "[parameters('workbookId')]",
-      "type": "microsoft.insights/myworkbooks",
+      "type": "microsoft.insights/workbooks",
       "location": "[resourceGroup().location]",
       "apiVersion": "2018-06-17-preview",
       "dependsOn": [],
