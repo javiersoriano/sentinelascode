@@ -7,7 +7,7 @@ name: build and deploy Hunting Rules
 resources:
  pipelines:
    - pipeline: Scripts
-     source: 'Build Scripts'
+     source: 'scriptsCI'
 trigger:
  paths:
    include:
