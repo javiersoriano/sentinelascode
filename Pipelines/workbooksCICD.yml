@@ -4,6 +4,10 @@
 # https://aka.ms/yaml
 
 name: build and deploy Workbooks
+resources:
+ pipelines:
+   - pipeline: Scripts
+     source: 'Build Scripts'
 
 trigger:
  paths:
@@ -42,14 +46,14 @@ stages:
       steps:
       - download: current
         artifact: Workbooks
-      - task: AzureResourceGroupDeployment@2
-        displayName: 'Deploy Workbooks'
+      - download: Scripts
+        patterns: '*.ps1'
+      - task: AzurePowerShell@4
+        displayName: 'Create and Update Workbooks'
         inputs:
-          azureSubscription: 'Soricloud Visual Studio'
-          resourceGroupName: '$(ResourceGroup)'
-          location: 'West Europe'
-          templateLocation: 'Linked artifact'
-          csmFile: '$(Pipeline.Workspace)/Workbooks/multi-tenant-incidents.json'
-          overrideParameters: '-workbookSourceId $(WorkbookSourceId)'
-
+         azureSubscription: 'Soricloud Visual Studio'
+         ScriptPath: '$(Pipeline.Workspace)/Scripts/Scripts/CreateWorkbooks.ps1'
+         ScriptArguments: '-resourceGroup $(ResourceGroup) -workbooksFolder $(Pipeline.Workspace)/Workbooks -workbookSourceId $(workbookSourceId)'
+         azurePowerShellVersion: LatestVersion
+         pwsh: true
 
