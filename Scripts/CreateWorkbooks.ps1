@@ -11,6 +11,5 @@ $armTemplateFiles = Get-ChildItem -Path $workbooksFolder -Filter *.json
 Write-Host "Files are: " $armTemplateFiles
 
 foreach ($armTemplate in $armTemplateFiles) {
-        $filePath = Join-Path $workbooksFolder $armTemplate
-        New-AzResourceGroupDeployment -ResourceGroupName $resourceGroup -TemplateFile $filePath -workbookSourceId $workbookSourceId 
+        New-AzResourceGroupDeployment -ResourceGroupName $resourceGroup -TemplateFile $armTemplate -workbookSourceId $workbookSourceId 
 }
