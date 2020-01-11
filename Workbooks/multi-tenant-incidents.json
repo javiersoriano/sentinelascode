@@ -17,7 +17,7 @@
     },
     "workbookSourceId": {
       "type": "string",
-      "defaultValue": "/subscriptions/1186543f-81e7-4a2c-ad55-fae1cc1c9eac/resourcegroups/sentinel/providers/microsoft.operationalinsights/workspaces/sorisentinel",
+      "defaultValue": "Azure Monitor",
       "metadata": {
         "description": "The id of resource instance to which the workbook will be associated"
       }
