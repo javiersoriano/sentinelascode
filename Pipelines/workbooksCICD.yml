@@ -42,9 +42,6 @@ stages:
       steps:
       - download: current
         artifact: Workbooks
-      - task: CmdLine@2
-        inputs:
-         script: 'dir /s' 
       - task: AzureResourceGroupDeployment@2
         displayName: 'Deploy Workbooks'
         inputs:
@@ -53,5 +50,6 @@ stages:
           location: 'West Europe'
           templateLocation: 'Linked artifact'
           csmFile: '$(Pipeline.Workspace)/Workbooks/multi-tenant-incidents.json'
+          overrideParameters: '-workbookSourceId $(WorkbookSourceId)'
 
 
