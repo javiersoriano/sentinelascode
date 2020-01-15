@@ -1,7 +1,5 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
+# Analytics Rules build and deploy pipeline
+# This pipeline publishes the rules file as an artifact and then uses a powershell task to deploy
 
 name: build and deploy Alert Rules
 resources:

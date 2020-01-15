@@ -1,7 +1,5 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
+# Scripts build pipeline
+# Copies script files to the agent and publishes an artifact with them
 
 trigger:
  paths:
@@ -23,4 +21,3 @@ steps:
   inputs:
     targetPath: Scripts
     artifact: Scripts
-
