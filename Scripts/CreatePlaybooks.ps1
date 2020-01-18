@@ -15,6 +15,6 @@ foreach ($armTemplate in $armTemplateFiles) {
     }
     catch {
         $ErrorMessage = $_.Exception.Message
-        Write-Host "Playbook deployment failed with message: $ErrorMessage" 
+        Write-Error "Playbook deployment failed with message: $ErrorMessage" 
     }
 }

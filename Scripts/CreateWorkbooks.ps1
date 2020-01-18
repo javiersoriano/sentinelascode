@@ -16,6 +16,6 @@ foreach ($armTemplate in $armTemplateFiles) {
     }
     catch {
         $ErrorMessage = $_.Exception.Message
-        Write-Host "Workbook deployment failed with message: $ErrorMessage" 
+        Write-Error "Workbook deployment failed with message: $ErrorMessage" 
     }
 }
