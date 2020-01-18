@@ -1,0 +1,58 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+name: build and deploy Playbooks
+resources:
+ pipelines:
+   - pipeline: Scripts
+     source: 'scriptsCI'
+
+trigger:
+ paths:
+   include:
+     - Playbooks/*
+
+stages:
+- stage: build_playbooks
+
+  jobs:
+    - job: AgentJob
+      pool:
+       name: Azure Pipelines
+       vmImage: 'vs2017-win2016'
+      steps:
+       - task: CopyFiles@2
+         displayName: 'Copy Playbooks'
+         inputs:
+          SourceFolder: Playbooks
+          TargetFolder: '$(Pipeline.Workspace)'
+
+       - task: PublishBuildArtifacts@1
+         displayName: 'Publish Artifact: Playbooks'
+         inputs:
+          PathtoPublish: '$(Pipeline.Workspace)'
+          ArtifactName: Playbooks
+
+- stage: deploy_playbooks
+  jobs:
+    - job: AgentJob
+      pool:
+       name: Azure Pipelines
+       vmImage: 'windows-2019'
+      variables: 
+      - group: Az connection settings
+      steps:
+      - download: current
+        artifact: Playbooks
+      - download: Scripts
+        patterns: '*.ps1'
+      - task: AzurePowerShell@4
+        displayName: 'Create and Update Playbooks'
+        inputs:
+         azureSubscription: 'Soricloud Visual Studio'
+         ScriptPath: '$(Pipeline.Workspace)/Scripts/Scripts/CreatePlaybooks.ps1'
+         ScriptArguments: '-resourceGroup $(ResourceGroup) -PlaybooksFolder $(Pipeline.Workspace)/Playbooks'
+         azurePowerShellVersion: LatestVersion
+         pwsh: true
