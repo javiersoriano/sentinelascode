@@ -53,5 +53,5 @@ stages:
         inputs:
          azureSubscription: 'Soricloud Visual Studio'
          ScriptPath: '$(Pipeline.Workspace)/Scripts/Scripts/CreatePlaybooks.ps1'
-         ScriptArguments: '-resourceGroup $(ResourceGroup) -workbooksFolder $(Pipeline.Workspace)/Playbooks'
+         ScriptArguments: '-resourceGroup $(ResourceGroup) -PlaybooksFolder $(Pipeline.Workspace)/Playbooks'
          azurePowerShellVersion: LatestVersion
