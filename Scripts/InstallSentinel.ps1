@@ -1,6 +1,5 @@
 param (
     [Parameter(Mandatory=$true)]$ResourceGroup,
-    [Parameter(Mandatory=$true)]$Workspace,
     [Parameter(Mandatory=$true)]$OnboardingFile
 )
 
@@ -21,11 +20,11 @@ foreach ($wrkspce in $workspaces.workspace){
     $solutions = Get-AzOperationalInsightsIntelligencePack -resourcegroupname $ResourceGroup -WorkspaceName $wrkspce
 
     if (($solutions | Where-Object Name -eq 'SecurityInsights').Enabled) {
-        Write-Error "SecurityInsights solution is already enabled for workspace $Workspace"
+        Write-Error "SecurityInsights solution is already enabled for workspace $wrkspce"
         exit
     }
     else {
-        Set-AzSentinel -WorkspaceName $Workspace -Confirm:$false
+        Set-AzSentinel -WorkspaceName $wrkspce -Confirm:$false
     }
 }
 
