@@ -55,6 +55,6 @@ stages:
         inputs:
          azureSubscription: 'Soricloud Visual Studio'
          ScriptPath: '$(Pipeline.Workspace)/Scripts/Scripts/InstallSentinel.ps1'
-         ScriptArguments: '-ResourceGroup $(ResourceGroup) -OnboardingFile onboarding.json'
+         ScriptArguments: '-OnboardingFile onboarding.json'
          azurePowerShellVersion: LatestVersion
          pwsh: true
