@@ -1,9 +1,11 @@
 {
-    "workspaces": [
+    "deployments": [
         {
+            "resourcegroup": "sentinel",
             "workspace": "sorisentinel"
         },
         {
+            "resourcegroup": "production",
             "workspace": "testlasoricloud"
         }
     ]

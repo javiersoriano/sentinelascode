@@ -1,5 +1,4 @@
 param (
-    [Parameter(Mandatory=$true)]$ResourceGroup,
     [Parameter(Mandatory=$true)]$OnboardingFile
 )
 
@@ -15,16 +14,18 @@ $onboardingFilePath = Join-Path $artifactPath $OnboardingFile
 
 $workspaces = Get-Content -Raw -Path $onboardingFilePath | ConvertFrom-Json
 
-foreach ($wrkspce in $workspaces.workspace){
+Write-Host "Deployments are: $workspaces"
+
+foreach ($item in $workspaces.deployments){
     Write-Host "Processing workspace $wrkspce ..."
-    $solutions = Get-AzOperationalInsightsIntelligencePack -resourcegroupname $ResourceGroup -WorkspaceName $wrkspce
+    $solutions = Get-AzOperationalInsightsIntelligencePack -resourcegroupname $item.resourcegroup -WorkspaceName $item.workspace
 
     if (($solutions | Where-Object Name -eq 'SecurityInsights').Enabled) {
-        Write-Error "SecurityInsights solution is already enabled for workspace $wrkspce"
+        Write-Error "SecurityInsights solution is already enabled for workspace $($item.workspace)"
         exit
     }
     else {
-        Set-AzSentinel -WorkspaceName $wrkspce -Confirm:$false
+        Set-AzSentinel -WorkspaceName $item.wrkspce -Confirm:$false
     }
 }
 
