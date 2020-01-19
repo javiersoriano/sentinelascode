@@ -3,13 +3,37 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-name: Deploy Sentinel
+name: build and deploy Sentinel
 resources:
  pipelines:
    - pipeline: Scripts
      source: 'scriptsCI'
+trigger:
+ paths:
+   include:
+     - Onboarding/*
 
 stages:
+- stage: build_onboarding_file
+
+  jobs:
+    - job: AgentJob
+      pool:
+       name: Azure Pipelines
+       vmImage: 'vs2017-win2016'
+      steps:
+       - task: CopyFiles@2
+         displayName: 'Copy Onboarding'
+         inputs:
+          SourceFolder: Onboard
+          TargetFolder: '$(Pipeline.Workspace)'
+
+       - task: PublishBuildArtifacts@1
+         displayName: 'Publish Artifact: OnboardingFile'
+         inputs:
+          PathtoPublish: '$(Pipeline.Workspace)'
+          ArtifactName: OnboardingFile
+
 - stage: deploy_sentinel
   jobs:
     - job: AgentJob
@@ -19,13 +43,18 @@ stages:
       variables: 
       - group: Az connection settings
       steps:
+      - download: current
+        artifact: OnboardingFile
       - download: Scripts
         patterns: '*.ps1'
+      - task: CmdLine@2
+        inputs:
+          script: 'dir /s'
       - task: AzurePowerShell@4
         displayName: 'Install Sentinel'
         inputs:
          azureSubscription: 'Soricloud Visual Studio'
          ScriptPath: '$(Pipeline.Workspace)/Scripts/Scripts/InstallSentinel.ps1'
-         ScriptArguments: '-ResourceGroup $(ResourceGroup) -Workspace $(Workspace)'
+         ScriptArguments: '-ResourceGroup $(ResourceGroup) -OnboardingFile onboarding.json'
          azurePowerShellVersion: LatestVersion
          pwsh: true
