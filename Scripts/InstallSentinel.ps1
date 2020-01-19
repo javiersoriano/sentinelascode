@@ -25,7 +25,7 @@ foreach ($item in $workspaces.deployments){
         exit
     }
     else {
-        Set-AzSentinel -WorkspaceName $item.wrkspce -Confirm:$false
+        Set-AzSentinel -WorkspaceName $item.workspace -Confirm:$false
     }
 }
 
