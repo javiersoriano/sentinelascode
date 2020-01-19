@@ -47,6 +47,9 @@ stages:
         artifact: OnboardingFile
       - download: Scripts
         patterns: '*.ps1'
+      - task: CmdLine@2
+        inputs:
+          script: 'dir /s'
       - task: AzurePowerShell@4
         displayName: 'Install Sentinel'
         inputs:
