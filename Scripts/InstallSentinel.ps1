@@ -19,7 +19,7 @@ foreach ($item in $workspaces.deployments){
     $solutions = Get-AzOperationalInsightsIntelligencePack -resourcegroupname $item.resourcegroup -WorkspaceName $item.workspace
 
     if (($solutions | Where-Object Name -eq 'SecurityInsights').Enabled) {
-        Write-Error "SecurityInsights solution is already enabled for workspace $($item.workspace)"
+        Write-Host "SecurityInsights solution is already enabled for workspace $($item.workspace)"
     }
     else {
         Set-AzSentinel -WorkspaceName $item.workspace -Confirm:$false
