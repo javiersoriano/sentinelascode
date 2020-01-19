@@ -25,7 +25,7 @@ stages:
        - task: CopyFiles@2
          displayName: 'Copy Onboarding'
          inputs:
-          SourceFolder: Onboarding
+          SourceFolder: Onboard
           TargetFolder: '$(Pipeline.Workspace)'
 
        - task: PublishBuildArtifacts@1
