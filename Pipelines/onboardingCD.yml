@@ -1,0 +1,31 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+name: Deploy Sentinel
+resources:
+ pipelines:
+   - pipeline: Scripts
+     source: 'scriptsCI'
+
+stages:
+- stage: deploy_sentinel
+  jobs:
+    - job: AgentJob
+      pool:
+       name: Azure Pipelines
+       vmImage: 'windows-2019'
+      variables: 
+      - group: Az connection settings
+      steps:
+      - download: Scripts
+        patterns: '*.ps1'
+      - task: AzurePowerShell@4
+        displayName: 'Install Sentinel'
+        inputs:
+         azureSubscription: 'Soricloud Visual Studio'
+         ScriptPath: '$(Pipeline.Workspace)/Scripts/Scripts/InstallSentinel.ps1'
+         ScriptArguments: '-ResourceGroup $(ResourceGroup) -Workspace $(Workspace)'
+         azurePowerShellVersion: LatestVersion
+         pwsh: true
