@@ -1,0 +1,10 @@
+{
+    "workspaces": [
+        {
+            "workspace": "sorisentinel"
+        },
+        {
+            "workspace": "testlasoricloud"
+        }
+    ]
+}
