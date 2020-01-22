@@ -26,7 +26,7 @@ Takes all the json files within a folder (specified as PlaybooksFolder parameter
 
 ## Workbooks deployment script (CreateWorkbooks.ps1)
 
-Takes all the json files within a folder (specified as WorkbooksFolder) and deploys them as Workbooks in the Sentinel environment. Parameter WorkbookSourceId is needed to specify that the workbook will be located inside Sentinel environment. If no parameter is provided, the workbook will be deployed in Azure Monitor.
+Takes all the json files within a folder (specified as WorkbooksFolder) and deploys them as Workbooks in the Sentinel environment. Parameter *WorkbookSourceId* is needed to specify that the workbook will be located inside Sentinel environment. If no parameter is provided, the workbook will be deployed in Azure Monitor.
 
 ### Syntax
 
