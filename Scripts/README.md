@@ -34,7 +34,7 @@ Takes all the json files within a folder (specified as WorkbooksFolder) and depl
 
 ## Install Sentinel script (InstallSentinel.ps1)
 
-Installs SecurityInsights (Sentinel) solution within the given workspace.
+Reads configuration file under Onboard folder and installs SecurityInsights (Sentinel) solution where required.
 
 ### Syntax
 
