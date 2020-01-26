@@ -38,4 +38,4 @@ Reads configuration file under Onboard folder and installs SecurityInsights (Sen
 
 ### Syntax
 
-`InstallSentinel.ps1 -ResourceGroup <String> -Workspace <String>`
+`InstallSentinel.ps1 -OnboardingFile <String>`
