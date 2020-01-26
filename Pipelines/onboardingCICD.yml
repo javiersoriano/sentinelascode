@@ -3,19 +3,18 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-name: build and deploy Workbooks
+name: build and deploy Sentinel
 resources:
  pipelines:
    - pipeline: Scripts
      source: 'scriptsCI'
-
 trigger:
  paths:
    include:
-     - Workbooks/*
+     - Onboarding/*
 
 stages:
-- stage: build_workbooks
+- stage: build_onboarding_file
 
   jobs:
     - job: AgentJob
@@ -24,18 +23,18 @@ stages:
        vmImage: 'vs2017-win2016'
       steps:
        - task: CopyFiles@2
-         displayName: 'Copy Workbooks'
+         displayName: 'Copy Onboarding'
          inputs:
-          SourceFolder: Workbooks
+          SourceFolder: Onboard
           TargetFolder: '$(Pipeline.Workspace)'
 
        - task: PublishBuildArtifacts@1
-         displayName: 'Publish Artifact: Workbooks'
+         displayName: 'Publish Artifact: OnboardingFile'
          inputs:
           PathtoPublish: '$(Pipeline.Workspace)'
-          ArtifactName: Workbooks
+          ArtifactName: OnboardingFile
 
-- stage: deploy_workbooks
+- stage: deploy_sentinel
   jobs:
     - job: AgentJob
       pool:
@@ -45,15 +44,14 @@ stages:
       - group: Az connection settings
       steps:
       - download: current
-        artifact: Workbooks
+        artifact: OnboardingFile
       - download: Scripts
         patterns: '*.ps1'
       - task: AzurePowerShell@4
-        displayName: 'Create and Update Workbooks'
+        displayName: 'Install Sentinel'
         inputs:
          azureSubscription: 'Soricloud Visual Studio'
-         ScriptPath: '$(Pipeline.Workspace)/Scripts/Scripts/CreateWorkbooks.ps1'
-         ScriptArguments: '-ResourceGroup $(ResourceGroup) -WorkbooksFolder $(Pipeline.Workspace)/Workbooks -WorkbookSourceId $(workbookSourceId)'
+         ScriptPath: '$(Pipeline.Workspace)/Scripts/Scripts/InstallSentinel.ps1'
+         ScriptArguments: '-OnboardingFile onboarding.json'
          azurePowerShellVersion: LatestVersion
          pwsh: true
-

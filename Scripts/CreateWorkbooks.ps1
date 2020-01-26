@@ -1,21 +1,21 @@
 param(
-    [Parameter(Mandatory=$true)]$resourceGroup,
-    [Parameter(Mandatory=$true)]$workbooksFolder,
-    [Parameter(Mandatory=$true)]$workbookSourceId
+    [Parameter(Mandatory=$true)]$ResourceGroup,
+    [Parameter(Mandatory=$true)]$WorkbooksFolder,
+    [Parameter(Mandatory=$true)]$WorkbookSourceId
 )
 
-Write-Host "Folder is: $($workbooksFolder)"
+Write-Host "Folder is: $($WorkbooksFolder)"
 
-$armTemplateFiles = Get-ChildItem -Path $workbooksFolder -Filter *.json
+$armTemplateFiles = Get-ChildItem -Path $WorkbooksFolder -Filter *.json
 
 Write-Host "Files are: " $armTemplateFiles
 
 foreach ($armTemplate in $armTemplateFiles) {
     try {
-        New-AzResourceGroupDeployment -ResourceGroupName $resourceGroup -TemplateFile $armTemplate -workbookSourceId $workbookSourceId 
+        New-AzResourceGroupDeployment -ResourceGroupName $ResourceGroup -TemplateFile $armTemplate -WorkbookSourceId $WorkbookSourceId 
     }
     catch {
         $ErrorMessage = $_.Exception.Message
-        Write-Host "Workbook deployment failed with message: $ErrorMessage" 
+        Write-Error "Workbook deployment failed with message: $ErrorMessage" 
     }
 }

@@ -16,7 +16,7 @@ YAML files that define the CI/CD pipelines that can be used to automated the dep
 
 ## Onboard
 
-Automating the installation of Azure Sentinel on a given Log Analytics workspace
+Automating the installation of Azure Sentinel on one or more workspaces as defined in config file under Onboard
 
 ## Connectors
 

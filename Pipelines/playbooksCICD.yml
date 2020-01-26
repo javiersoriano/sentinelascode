@@ -3,7 +3,7 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-name: build and deploy Workbooks
+name: build and deploy Playbooks
 resources:
  pipelines:
    - pipeline: Scripts
@@ -12,10 +12,10 @@ resources:
 trigger:
  paths:
    include:
-     - Workbooks/*
+     - Playbooks/*
 
 stages:
-- stage: build_workbooks
+- stage: build_playbooks
 
   jobs:
     - job: AgentJob
@@ -24,18 +24,18 @@ stages:
        vmImage: 'vs2017-win2016'
       steps:
        - task: CopyFiles@2
-         displayName: 'Copy Workbooks'
+         displayName: 'Copy Playbooks'
          inputs:
-          SourceFolder: Workbooks
+          SourceFolder: Playbooks
           TargetFolder: '$(Pipeline.Workspace)'
 
        - task: PublishBuildArtifacts@1
-         displayName: 'Publish Artifact: Workbooks'
+         displayName: 'Publish Artifact: Playbooks'
          inputs:
           PathtoPublish: '$(Pipeline.Workspace)'
-          ArtifactName: Workbooks
+          ArtifactName: Playbooks
 
-- stage: deploy_workbooks
+- stage: deploy_playbooks
   jobs:
     - job: AgentJob
       pool:
@@ -45,15 +45,14 @@ stages:
       - group: Az connection settings
       steps:
       - download: current
-        artifact: Workbooks
+        artifact: Playbooks
       - download: Scripts
         patterns: '*.ps1'
       - task: AzurePowerShell@4
-        displayName: 'Create and Update Workbooks'
+        displayName: 'Create and Update Playbooks'
         inputs:
          azureSubscription: 'Soricloud Visual Studio'
-         ScriptPath: '$(Pipeline.Workspace)/Scripts/Scripts/CreateWorkbooks.ps1'
-         ScriptArguments: '-ResourceGroup $(ResourceGroup) -WorkbooksFolder $(Pipeline.Workspace)/Workbooks -WorkbookSourceId $(workbookSourceId)'
+         ScriptPath: '$(Pipeline.Workspace)/Scripts/Scripts/CreatePlaybooks.ps1'
+         ScriptArguments: '-resourceGroup $(ResourceGroup) -PlaybooksFolder $(Pipeline.Workspace)/Playbooks'
          azurePowerShellVersion: LatestVersion
          pwsh: true
-
