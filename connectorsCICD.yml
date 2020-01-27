@@ -1,0 +1,56 @@
+# Connectors build and deploy pipeline
+# This pipeline publishes the connectors file as an artifact and then uses a powershell task to deploy
+
+name: build and deploy Connectors
+resources:
+ pipelines:
+   - pipeline: Scripts
+     source: 'scriptsCI'
+trigger:
+ paths:
+   include:
+     - Connectors/*
+
+stages:
+- stage: build_connectors
+
+  jobs:
+    - job: AgentJob
+      pool:
+       name: Azure Pipelines
+       vmImage: 'vs2017-win2016'
+      steps:
+       - task: CopyFiles@2
+         displayName: 'Copy Connectors'
+         inputs:
+          SourceFolder: Connectors
+          TargetFolder: '$(Pipeline.Workspace)'
+
+       - task: PublishBuildArtifacts@1
+         displayName: 'Publish Artifact: ConnectorsFile'
+         inputs:
+          PathtoPublish: '$(Pipeline.Workspace)'
+          ArtifactName: ConnectorsFile
+
+- stage: deploy_connectors
+  jobs:
+    - job: AgentJob
+      pool:
+       name: Azure Pipelines
+       vmImage: 'windows-2019'
+      variables: 
+      - group: Az connection settings
+      steps:
+      - download: current
+        artifact: ConnectorsFile
+      - download: Scripts
+        patterns: '*.ps1'
+      - task: AzurePowerShell@4
+        displayName: 'Create and Update Connectors'
+        inputs:
+         azureSubscription: 'Soricloud Visual Studio'
+         ScriptPath: '$(Pipeline.Workspace)/Scripts/Scripts/EnableConnectorsAPI.ps1'
+         ScriptArguments: '-TenantId $(TenantId) -ClientId $(ClientId) -ClientSecret $(ClientSecret) -SubscriptionId $(SubscriptionId) -ResourceGroup $(ResourceGroup) -Workspace $(Workspace) -ConnectorsFile connectors.json'
+         azurePowerShellVersion: LatestVersion
+         pwsh: true
+
