@@ -1,0 +1,75 @@
+# Analytics Rules build and deploy pipeline for multi-tenant environments
+# This pipeline has multiple jobs within the release stage, one for each tenant
+# This pipeline publishes the rules file as an artifact and then uses a powershell task to deploy
+
+name: build and deploy Alert Rules (multi job)
+resources:
+ pipelines:
+   - pipeline: Scripts
+     source: 'scriptsCI'
+trigger:
+ paths:
+   include:
+     - AnalyticsRules/*
+
+stages:
+- stage: build_alert_rules
+
+  jobs:
+    - job: AgentJob
+      pool:
+       name: Azure Pipelines
+       vmImage: 'vs2017-win2016'
+      steps:
+       - task: CopyFiles@2
+         displayName: 'Copy Alert Rules'
+         inputs:
+          SourceFolder: AnalyticsRules
+          TargetFolder: '$(Pipeline.Workspace)'
+
+       - task: PublishBuildArtifacts@1
+         displayName: 'Publish Artifact: RulesFile'
+         inputs:
+          PathtoPublish: '$(Pipeline.Workspace)'
+          ArtifactName: RulesFile
+
+- stage: deploy_alert_rules
+  jobs:
+    - job: AgentJob_CustomerA
+      pool:
+       name: Azure Pipelines
+       vmImage: 'windows-2019'
+      variables: 
+      - group: Customer A Azure connection settings
+      steps:
+      - download: current
+        artifact: RulesFile
+      - download: Scripts
+        patterns: '*.ps1'
+      - task: AzurePowerShell@4
+        displayName: 'Create and Update Alert Rules Customer A'
+        inputs:
+         azureSubscription: 'Customer A Azure Subscription'
+         ScriptPath: '$(Pipeline.Workspace)/Scripts/Scripts/CreateAnalyticsRulesAPI.ps1'
+         ScriptArguments: '-TenantId $(TenantId) -ClientId $(ClientId) -ClientSecret $(ClientSecret) -SubscriptionId $(SubscriptionId) -ResourceGroup $(ResourceGroup) -Workspace $(Workspace) -RulesFile analytics-rules.json'
+         azurePowerShellVersion: LatestVersion
+         pwsh: true
+    - job: AgentJob_CustomerB
+      pool:
+       name: Azure Pipelines
+       vmImage: 'windows-2019'
+      variables: 
+      - group: Customer B Azure connection settings
+      steps:
+      - download: current
+        artifact: RulesFile
+      - download: Scripts
+        patterns: '*.ps1'
+      - task: AzurePowerShell@4
+        displayName: 'Create and Update Alert Rules Customer B'
+        inputs:
+         azureSubscription: 'Customer B Azure Subscription'
+         ScriptPath: '$(Pipeline.Workspace)/Scripts/Scripts/CreateAnalyticsRulesAPI.ps1'
+         ScriptArguments: '-TenantId $(TenantId) -ClientId $(ClientId) -ClientSecret $(ClientSecret) -SubscriptionId $(SubscriptionId) -ResourceGroup $(ResourceGroup) -Workspace $(Workspace) -RulesFile analytics-rules.json'
+         azurePowerShellVersion: LatestVersion
+         pwsh: true
