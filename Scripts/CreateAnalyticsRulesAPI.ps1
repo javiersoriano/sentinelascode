@@ -175,8 +175,12 @@ foreach ($rule in $rules.analytics) {
 
         if ($rule.kind -eq "Scheduled") {
             Write-Host "Rule type is Scheduled. Using AzSentinel..."
-            
-            New-AzSentinelAlertRule -WorkspaceName $Workspace -DisplayName $rule.displayName -Description $rule.description -Severity $rule.severity -Enabled $rule.enabled -Query $rule.query -QueryFrequency $rule.queryFrequency -QueryPeriod $rule.queryPeriod -TriggerOperator $rule.triggerOperator -TriggerThreshold $rule.triggerThreshold -SuppressionDuration $rule.suppressionDuration -SuppressionEnabled $rule.suppressionEnabled -Tactics $rule.tactics -PlayBookName $rule.playbookName
+            try {
+                New-AzSentinelAlertRule -WorkspaceName $Workspace -DisplayName $rule.displayName -Description $rule.description -Severity $rule.severity -Enabled $rule.enabled -Query $rule.query -QueryFrequency $rule.queryFrequency -QueryPeriod $rule.queryPeriod -TriggerOperator $rule.triggerOperator -TriggerThreshold $rule.triggerThreshold -SuppressionDuration $rule.suppressionDuration -SuppressionEnabled $rule.suppressionEnabled -Tactics $rule.tactics -PlayBookName $rule.playbookName
+            }
+            catch {
+                
+            }
         }
         elseif ($rule.kind -eq "Fusion") {
             Write-Host "Rule type is Fusion"
