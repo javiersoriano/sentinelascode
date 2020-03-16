@@ -11,7 +11,7 @@ resources:
 trigger:
  paths:
    include:
-     - AnalyticsRules/*
+     - HuntingRules/*
 
 stages:
 - stage: build_hunting_rules
