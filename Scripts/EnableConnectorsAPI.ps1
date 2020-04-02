@@ -8,10 +8,6 @@ param(
     [Parameter(Mandatory=$true)]$ConnectorsFile
 )
 
-#Normalized Subscription ID
-$SubscriptionIdNormalized = $SubscriptionId -replace '-',''
-
-
 #Name of the Azure DevOps artifact
 $artifactName = "ConnectorsFile"
 
@@ -19,15 +15,16 @@ $artifactName = "ConnectorsFile"
 $artifactPath = Join-Path $env:Pipeline_Workspace $artifactName 
 $connectorsFilePath = Join-Path $artifactPath $ConnectorsFile
 
+
 #Resource URL to authentincate against
 $Resource = "https://management.azure.com/"
 
 #Urls to be used for Sentinel API calls
-$baseUri = "https://management.azure.com/subscriptions/$SubscriptionId/resourceGroups/$ResourceGroup/providers/Microsoft.OperationalInsights/workspaces/$Workspace"
+$baseUri = "https://management.azure.com/subscriptions/${SubscriptionId}/resourceGroups/${ResourceGroup}/providers/Microsoft.OperationalInsights/workspaces/${Workspace}"
 
 $RequestAccessTokenUri = "https://login.microsoftonline.com/$TenantId/oauth2/token"
 
-$body = "grant_type=client_credentials&client_id=$ClientId&client_secret=$ClientSecret&resource=$Resource"
+$body = "grant_type=client_credentials&client_id=${ClientId}&client_secret=${ClientSecret}&resource=${Resource}"
 
 $Token = Invoke-RestMethod -Method Post -Uri $RequestAccessTokenUri -Body $body -ContentType 'application/x-www-form-urlencoded'
 
@@ -49,18 +46,41 @@ foreach ($connector in $connectors.connectors) {
 
     #AzureActivityLog connector
     if ($connector.kind -eq "AzureActivityLog") {
-        $uri = "$baseUri/datasources/${SubscriptionIdNormalized}?api-version=2015-11-01-preview"
+        $uri = "$baseUri/datasources/${SubscriptionId}?api-version=2020-03-01-preview"
+        $connectorBody = ""
+        $activityEnabled = $false
 
+        #Check if AzureActivityLog is already connected (there is no better way yet) [assuming there is only one AzureActivityLog from same subscription connected]
         try {
-            $result = Invoke-webrequest -Uri $uri -Method Get -Headers $Headers
-            Write-Output "Successfully queried data connctor $($connector.kind) - already enabled"
+            # AzureActivityLog is already connected, compose body with existing etag for update
+            $result = Invoke-webrequest -Uri $uri -Method Get -Headers $Headers | ConvertFrom-Json
+            Write-Host "Successfully queried data connctor ${connector.kind} - already enabled"
+            Write-Verbose $result
+            Write-Host "Updating data connector $($connector.kind)"
+
+            $activityEnabled = $true
+            $connectorProperties = @{
+                linkedResourceId = "/subscriptions/${SubscriptionId}/providers/microsoft.insights/eventtypes/management"
+            }        
+            
+            $connectorBody = @{
+                kind = $result.kind
+                properties = $connectorProperties
+                id = $result.id
+                etag = $result.etag
+                name = $result.name
+                type = $result.type
+            }
         }
         catch { 
             $errorReturn = $_
+            #If return code is 404 we are assuming AzureActivityLog is not enabled yet
             if ($_.Exception.Response.StatusCode.value__ = 404) {
                 Write-Host "Data connector $($connector.kind) is not enabled"  
-                Write-Host "Enabaling dataconnector $($connector.kind) now"
+                Write-Verbose $_
+                Write-Host "Enabling data connector $($connector.kind)"
 
+                $activityEnabled = $false
                 $connectorProperties = @{
                     linkedResourceId = "/subscriptions/${SubscriptionId}/providers/microsoft.insights/eventtypes/management"
                 }        
@@ -68,71 +88,127 @@ foreach ($connector in $connectors.connectors) {
                 $connectorBody = @{
                     kind = $connector.kind
                     properties = $connectorProperties
-                }
-                try {
-                    $result = Invoke-webrequest -Uri $uri -Method Put -Headers $Headers -Body ($connectorBody | ConvertTo-Json -EnumsAsStrings)
-                    Write-Output "Successfully enabled connector: $($connector.kind) with status: $($result.StatusDescription)"
-                    Write-Output ($body.Properties | Format-List | Format-Table | Out-String)
-                }
-                catch {
-                    $errorReturn = $_
-                    $errorResult = ($errorReturn | ConvertFrom-Json ).error
-                    Write-Verbose $_.Exception.Message
-                    Write-Error "Unable to invoke webrequest with error message: $($errorResult.message)" -ErrorAction Stop
-                }   
+                    id = $connector.id
+                    name = $connector.name
+                    type = $connector.type
+                } 
             }
+            #Any other eeror code is interpreted as error 
             else {
                 $errorResult = ($errorReturn | ConvertFrom-Json ).error
                 Write-Verbose $_.Exception.Message
                 Write-Error "Unable to invoke webrequest with error message: $($errorResult.message)" -ErrorAction Stop           
             }
         }
+
+        #Enable or Update AzureActivityLog Connector with http puth method
+        try {
+            $result = Invoke-webrequest -Uri $uri -Method Put -Headers $Headers -Body ($connectorBody | ConvertTo-Json -EnumsAsStrings)
+            if ($activityEnabled) {
+                Write-Host "Successfully update data connector: $($connector.kind) with status: $($result.StatusDescription)"
+            }
+            else {
+                Write-Host "Successfully enabled data connector: $($connector.kind) with status: $($result.StatusDescription)"
+            }
+             
+             Write-Verbose ($body.Properties | Format-List | Format-Table | Out-String)
+        }
+        catch {
+            $errorReturn = $_
+            $errorResult = ($errorReturn | ConvertFrom-Json ).error
+            Write-Verbose $_.Exception.Message
+            Write-Error "Unable to invoke webrequest with error message: $($errorResult.message)" -ErrorAction Stop
+        }  
     }
 
     #AzureSecurityCenter connector
     if ($connector.kind -eq "AzureSecurityCenter") {
-        #unknown ID, clarify with Javi
-        $curiousId = "1e1b282a-ce14-4feb-8bc1-48249fab9109"
-        $uri = "$baseUri/providers/Microsoft.SecurityInsights/dataConnectors/${curiousId}?api-version=2019-01-01-preview"
+        $ascEnabled = $false
+        $guid = (New-Guid).Guid
+        $etag = ""
+        $connectorBody = ""
+        $uri = "$baseUri/providers/Microsoft.SecurityInsights/dataConnectors/?api-version=2020-01-01"
 
+        #Query for connected datasources and search AzureSecurityCenter
         try {
-            $result = Invoke-webrequest -Uri $uri -Method Get -Headers $Headers
-            Write-Output "Successfully queried data connctor $($connector.kind) - already enabled"
+            $result = Invoke-webrequest -Uri $uri -Method Get -Headers $Headers | ConvertFrom-Json
+            foreach ($value in $result.value){
+                # Check if ASC is already enabled (assuming there will be only one ASC per workspace)
+                if ($value.kind -eq "AzureSecurityCenter") {
+                    Write-Host "Successfully queried data connctor $($value.kind) - already enabled"
+                    Write-Verbose $value
+                    $guid = $value.name
+                    $etag = $value.etag
+                    $ascEnabled = $true
+                    break
+                }
+            }
         }
-        catch { 
+        catch {
             $errorReturn = $_
-            if ($_.Exception.Response.StatusCode.value__ = 404) {
-                Write-Host "Data connector $($connector.kind) is not enabled"  
-                Write-Host "Enabaling dataconnector $($connector.kind) now"
+        }
 
-                $connectorBody = @{
-                    kind = $connector.kind
-                    properties = @{
-                        subscriptionId = $SubscriptionId
-                        dataTypes = @{
-                            alerts = @{
-                                state = $connector.properties.dataTypes.alerts.state
-                            }
+        if ($ascEnabled) {
+            # Compose body for connector update scenario
+            Write-Host "Updating data connector $($connector.kind)"
+            Write-Verbose "Name: $guid"
+            Write-Verbose "Etag: $etag"
+
+            $connectorBody = @{
+                id = "${baseUri}/providers/Microsoft.SecurityInsights/dataConnectors/${guid}"
+                name = $guid
+                etag = $etag
+                type = "Microsoft.SecurityInsights/dataConnectors"
+                kind = $connector.kind
+                properties = @{
+                    subscriptionId = $SubscriptionId
+                    dataTypes = @{
+                        alerts = @{
+                            state = "enabled"
                         }
                     }
                 }
-                try {
-                    $result = Invoke-webrequest -Uri $uri -Method Put -Headers $Headers -Body ($connectorBody | ConvertTo-Json -Depth 4 -EnumsAsStrings)
-                    Write-Output "Successfully enabled connector: $($connector.kind) with status: $($result.StatusDescription)"
-                    Write-Output ($body.Properties | Format-List | Format-Table | Out-String)
+            }
+        }
+        else {
+            # Compose body for connector enable scenario
+            Write-Host "$($connector.kind) data connector is not enabled yet"
+            Write-Host "Enabling data connector $($connector.kind)"
+            Write-Verbose "Name: $guid"
+
+            $connectorBody = @{
+                id = "${baseUri}/providers/Microsoft.SecurityInsights/dataConnectors/${guid}"
+                name = $guid
+                type = "Microsoft.SecurityInsights/dataConnectors"
+                kind = $connector.kind
+                properties = @{
+                    subscriptionId = $SubscriptionId
+                    dataTypes = @{
+                        alerts = @{
+                            state = "enabled"
+                        }
+                    }
                 }
-                catch {
-                    $errorReturn = $_
-                    $errorResult = ($errorReturn | ConvertFrom-Json ).error
-                    Write-Verbose $_.Exception.Message
-                    Write-Error "Unable to invoke webrequest with error message: $($errorResult.message)" -ErrorAction Stop
-                }   
+            }
+        }
+
+        # Enable or update AzureSecurityCenter with http put method
+        $uri = "${baseUri}/providers/Microsoft.SecurityInsights/dataConnectors/${guid}?api-version=2020-01-01"
+        try {
+            $result = Invoke-webrequest -Uri $uri -Method Put -Headers $Headers -Body ($connectorBody | ConvertTo-Json -Depth 4 -EnumsAsStrings)
+            if ($ascEnabled) {
+                Write-Host "Successfully updated data connector: $($connector.kind) with status: $($result.StatusDescription)"
             }
             else {
-                $errorResult = ($errorReturn | ConvertFrom-Json ).error
-                Write-Verbose $_.Exception.Message
-                Write-Error "Unable to invoke webrequest with error message: $($errorResult.message)" -ErrorAction Stop           
+                Write-Host "Successfully enabled data connector: $($connector.kind) with status: $($result.StatusDescription)"
             }
+            Write-Verbose ($body.Properties | Format-List | Format-Table | Out-String)
+        }
+        catch {
+            $errorReturn = $_
+            $errorResult = ($errorReturn | ConvertFrom-Json ).error
+            Write-Verbose $_
+            Write-Error "Unable to invoke webrequest with error message: $($errorResult.message)" -ErrorAction Stop
         }
     }
 }
