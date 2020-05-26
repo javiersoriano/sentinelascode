@@ -179,7 +179,8 @@ foreach ($rule in $rules.analytics) {
                 New-AzSentinelAlertRule -WorkspaceName $Workspace -DisplayName $rule.displayName -Description $rule.description -Severity $rule.severity -Enabled $rule.enabled -Query $rule.query -QueryFrequency $rule.queryFrequency -QueryPeriod $rule.queryPeriod -TriggerOperator $rule.triggerOperator -TriggerThreshold $rule.triggerThreshold -SuppressionDuration $rule.suppressionDuration -SuppressionEnabled $rule.suppressionEnabled -Tactics $rule.tactics -PlayBookName $rule.playbookName
             }
             catch {
-                
+                $ErrorMessage = $_.Exception.Message
+                Write-Error "Alert rule creation failed with message: $ErrorMessage"
             }
         }
         elseif ($rule.kind -eq "Fusion") {
