@@ -46,14 +46,14 @@ stages:
         artifact: RulesFile
       - download: Scripts
         patterns: '*.ps1'
-      - task: AzurePowerShell@4
-        displayName: 'Create and Update Alert Rules Customer A'
+      - task: AzurePowerShell@5
         inputs:
-         azureSubscription: 'Customer A Azure Subscription'
-         ScriptPath: '$(Pipeline.Workspace)/Scripts/Scripts/CreateAnalyticsRulesAPI.ps1'
-         ScriptArguments: '-TenantId $(TenantId) -ClientId $(ClientId) -ClientSecret $(ClientSecret) -SubscriptionId $(SubscriptionId) -ResourceGroup $(ResourceGroup) -Workspace $(Workspace) -RulesFile analytics-rules.json'
-         azurePowerShellVersion: LatestVersion
-         pwsh: true
+          azureSubscription: 'Microsoft AIRS'
+          ScriptType: 'FilePath'
+          ScriptPath: '$(Pipeline.Workspace)/Scripts/Scripts/CreateAnalyticsRulesAPI.ps1'
+          ScriptArguments: '-TenantId $(TenantId) -ClientId $(ClientId) -ClientSecret $(ClientSecret) -SubscriptionId $(SubscriptionId) -ResourceGroup $(ResourceGroup) -Workspace $(Workspace) -RulesFile analytics-rules.json'
+          azurePowerShellVersion: 'LatestVersion'
+          pwsh: true
 
 - stage: deploy_alert_rules_customerB
   jobs:
@@ -68,14 +68,14 @@ stages:
         artifact: RulesFile
       - download: Scripts
         patterns: '*.ps1'
-      - task: AzurePowerShell@4
-        displayName: 'Create and Update Alert Rules Customer B'
+      - task: AzurePowerShell@5
         inputs:
-         azureSubscription: 'Customer B Azure Subscription'
-         ScriptPath: '$(Pipeline.Workspace)/Scripts/Scripts/CreateAnalyticsRulesAPI.ps1'
-         ScriptArguments: '-TenantId $(TenantId) -ClientId $(ClientId) -ClientSecret $(ClientSecret) -SubscriptionId $(SubscriptionId) -ResourceGroup $(ResourceGroup) -Workspace $(Workspace) -RulesFile analytics-rules.json'
-         azurePowerShellVersion: LatestVersion
-         pwsh: true
+          azureSubscription: 'Soricloud Visual Studio'
+          ScriptType: 'FilePath'
+          ScriptPath: '$(Pipeline.Workspace)/Scripts/Scripts/CreateAnalyticsRulesAPI.ps1'
+          ScriptArguments: '-TenantId $(TenantId) -ClientId $(ClientId) -ClientSecret $(ClientSecret) -SubscriptionId $(SubscriptionId) -ResourceGroup $(ResourceGroup) -Workspace $(Workspace) -RulesFile analytics-rules.json'
+          azurePowerShellVersion: 'LatestVersion'
+          pwsh: true
 
 
 
