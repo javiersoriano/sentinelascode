@@ -4,6 +4,8 @@
 
 The purpose of this project is to provide tools to enable automatic deployment of Azure Sentinel environments through Azure DevOps.
 
+A blog post explaining more about this project is available at [Deploying and Managing Azure Sentinel as code](https://techcommunity.microsoft.com/t5/azure-sentinel/deploying-and-managing-azure-sentinel-as-code/ba-p/1131928)
+
 The project has several folders for each of the different Sentinel components that can be configured (Onboard, Connectors, Workbooks, Analytics Rules, Hunting Rules, Playbooks) plus folders for script helpers and Az DevOps YAML pipelines. In this README we explain some of the basics for each of them but we encourage you to visit each of the folders for more details on how to use the tools.
 
 ## Scripts
