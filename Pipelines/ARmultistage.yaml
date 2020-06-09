@@ -56,6 +56,7 @@ stages:
           pwsh: true
 
 - stage: deploy_alert_rules_customerB
+  dependsOn: []
   jobs:
     - job: AgentJob
       pool:
