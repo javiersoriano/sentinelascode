@@ -40,7 +40,7 @@ stages:
        name: Azure Pipelines
        vmImage: 'windows-2019'
       variables: 
-      - group: Customer A Azure connection settings
+      - group: AIRS
       steps:
       - download: current
         artifact: RulesFile
@@ -62,7 +62,7 @@ stages:
        name: Azure Pipelines
        vmImage: 'windows-2019'
       variables: 
-      - group: Customer B Azure connection settings
+      - group: Az connection settings
       steps:
       - download: current
         artifact: RulesFile
