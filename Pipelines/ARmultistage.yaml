@@ -34,6 +34,7 @@ stages:
           ArtifactName: RulesFile
 
 - stage: deploy_alert_rules_customerA
+  dependsOn: build_alert_rules
   jobs:
     - job: AgentJob
       pool:
@@ -56,7 +57,7 @@ stages:
           pwsh: true
 
 - stage: deploy_alert_rules_customerB
-  dependsOn: []
+  dependsOn: build_alert_rules
   jobs:
     - job: AgentJob
       pool:
