@@ -6,7 +6,6 @@ resources:
  pipelines:
    - pipeline: Scripts
      source: 'scriptsCI'
-     trigger: true
 trigger:
  paths:
    include:
