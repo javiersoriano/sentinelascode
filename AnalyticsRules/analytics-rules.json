@@ -26,7 +26,7 @@
         ) on CallerIpAddress, Caller
         | extend timestamp = StartTimeUtc, AccountCustomEntity = Caller, IPCustomEntity = CallerIpAddress",
         "queryFrequency": "5H",
-        "queryPeriod": "6H",
+        "queryPeriod": "5H",
         "triggerOperator": "GreaterThan",
         "triggerThreshold": 5,
         "suppressionDuration": "6H",
