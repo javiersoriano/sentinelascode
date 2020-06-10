@@ -81,25 +81,6 @@
         "displayName": "(Preview) Anomalous SSH Login Detection",
         "enabled": true,
         "alertRuleTemplateName": "fa118b98-de46-4e94-87f9-8e6d5060b60b"
-      },
-      {
-        "kind": "Scheduled",
-        "displayName": "DemoAlert",
-        "description": "test",
-        "severity": "High",
-        "enabled": true,
-        "query": "SecurityEvent | where EventID == \"5555\" | where CommandLine contains \"-noni -ep bypass $\"",
-        "queryFrequency": "5H",
-        "queryPeriod": "6H",
-        "triggerOperator": "GreaterThan",
-        "triggerThreshold": 5,
-        "suppressionDuration": "6H",
-        "suppressionEnabled": false,
-        "tactics": [
-          "Persistence",
-          "LateralMovement"
-        ],
-        "playbookName": ""
       }
     ]
   }
