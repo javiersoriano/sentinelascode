@@ -212,3 +212,50 @@ foreach ($connector in $connectors.connectors) {
         }
     }
 }
+
+# Azure Active Directory Audit/SignIn logs - requires special call and is therefore not connectors file
+# Be aware that you executing SPN needs Owner rights on tenant scope for this operation, can be added with following CLI
+# az role assignment create --role Owner --scope "/" --assignee {13ece749-d0a0-46cf-8000-b2552b520631}
+$uri = "${Resource}providers/microsoft.aadiam/diagnosticSettings/AzureSentinel_${Workspace}?api-version=2017-04-01"
+$connectorBody = @"
+
+{
+    "id": "/providers/microsoft.aadiam/diagnosticSettings/AzureSentinel_${Workspace}",
+    "name": "AzureSentinel_${Workspace}",
+    "properties": {
+        "logs": [
+            {
+                "category": "SignInLogs",
+                "enabled": true,
+                "retentionPolicy": {
+                    "days": 0,
+                    "enabled": false
+                }
+            },
+            {
+                "category": "AuditLogs",
+                "enabled": true,
+                "retentionPolicy": {
+                    "days": 0,
+                    "enabled": false
+                }
+            }
+        ],
+        "metrics": [],
+        "workspaceId": "/subscriptions/${SubscriptionId}/resourceGroups/${ResourceGroup}/providers/Microsoft.OperationalInsights/workspaces/${Workspace}"
+    }
+}
+"@
+Write-Output $uri
+Write-Output $connectorBody
+
+try {
+    $result = Invoke-webrequest -Uri $uri -Method Put -Headers $Headers -Body ($connectorBody)
+    Write-Host "Successfully updated data connector: Azure Active Directory with status: $($result.StatusDescription)"
+}
+catch {
+    $errorReturn = $_
+    $errorResult = ($errorReturn | ConvertFrom-Json ).error
+    Write-Verbose $_
+    Write-Error "Unable to invoke webrequest with error message: $($errorResult.message)" -ErrorAction Stop
+}
