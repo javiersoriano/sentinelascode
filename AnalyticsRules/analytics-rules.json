@@ -58,6 +58,25 @@
         "playbookName": ""
       },
       {
+        "kind": "Scheduled",
+        "displayName": "Rule01-04-09 Suspicious activity",
+        "description": "test",
+        "severity": "High",
+        "enabled": true,
+        "query": "SecurityEvent | where EventID == \"4688\" | where CommandLine contains \"-noni -ep bypass $\"",
+        "queryFrequency": "5H",
+        "queryPeriod": "6H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 5,
+        "suppressionDuration": "6H",
+        "suppressionEnabled": false,
+        "tactics": [
+          "Persistence",
+          "LateralMovement"
+        ],
+        "playbookName": ""
+      },
+      {
         "kind": "MicrosoftSecurityIncidentCreation",
         "displayName": "Create incidents based on Azure Active Directory Identity Protection alerts",
         "description": "Create incidents based on all alerts generated in Azure Active Directory Identity Protection",
