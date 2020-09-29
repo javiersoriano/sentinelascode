@@ -1,4 +1,4 @@
-[![Build Status](https://dev.azure.com/soricloud/SentinelAsCode/_apis/build/status/alertRulesCICD.yml?branchName=master)](https://dev.azure.com/soricloud/SentinelAsCode/_build/latest?definitionId=21&branchName=master)
+[![Build Status](https://dev.azure.com/soricloud/SentinelAsCode/_apis/build/status/scriptsCI.yml?branchName=master)](https://dev.azure.com/soricloud/SentinelAsCode/_build/latest?definitionId=21&branchName=master)
 
 # Azure Sentinel as Code
 

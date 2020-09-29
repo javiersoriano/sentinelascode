@@ -4,6 +4,8 @@ This folder contains all the different Azure DevOps pipelines in YAML format so 
 
 These pipelines are written using the Pipeline artifacts feature (see: https://docs.microsoft.com/es-es/azure/devops/pipelines/artifacts/pipeline-artifacts?view=azure-devops&tabs=yaml) and they contain build and deploy stages in a single pipeline.
 
+In order for these pipelines to work, you need to install in the **Files Validator** extension from https://marketplace.visualstudio.com/items?itemName=roshkovski.Files-Validator in your Azure DevOps organization.
+
 ## buildScripts.yml
 Build pipeline that gets all the powershell scripts in the Scripts folder and publishes as a pipeline artifact to be used in other pipelines. It also validates powershell syntax.
 
