@@ -28,7 +28,13 @@ stages:
          inputs:
           SourceFolder: Playbooks
           TargetFolder: '$(Pipeline.Workspace)'
-
+       - task: Files-Validator@1
+         inputs:
+           rootDir: '$(Pipeline.Workspace)/*.json'
+           validateXML: false
+           validateJSON: true
+           validateYAML: false
+           validatePS: false
        - task: PublishBuildArtifacts@1
          displayName: 'Publish Artifact: Playbooks'
          inputs:

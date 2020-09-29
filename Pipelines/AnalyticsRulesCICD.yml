@@ -1,20 +1,23 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
+# Analytics Rules build and deploy pipeline
+# This pipeline publishes the rules file as an artifact and then uses a powershell task to deploy
 
-name: build and deploy Sentinel
+name: build and deploy Alert Rules
 resources:
  pipelines:
    - pipeline: Scripts
      source: 'scriptsCI'
 trigger:
+ branches: 
+   include:
+   - development
+   exclude:
+   - master
  paths:
    include:
-     - Onboarding/*
+     - AnalyticsRules/*
 
 stages:
-- stage: build_onboarding_file
+- stage: build_alert_rules
 
   jobs:
     - job: AgentJob
@@ -23,9 +26,9 @@ stages:
        vmImage: 'vs2017-win2016'
       steps:
        - task: CopyFiles@2
-         displayName: 'Copy Onboarding'
+         displayName: 'Copy Alert Rules'
          inputs:
-          SourceFolder: Onboard
+          SourceFolder: AnalyticsRules
           TargetFolder: '$(Pipeline.Workspace)'
        - task: Files-Validator@1
          inputs:
@@ -35,12 +38,12 @@ stages:
            validateYAML: false
            validatePS: false
        - task: PublishBuildArtifacts@1
-         displayName: 'Publish Artifact: OnboardingFile'
+         displayName: 'Publish Artifact: RulesFile'
          inputs:
           PathtoPublish: '$(Pipeline.Workspace)'
-          ArtifactName: OnboardingFile
+          ArtifactName: RulesFile
 
-- stage: deploy_sentinel
+- stage: deploy_alert_rules
   jobs:
     - job: AgentJob
       pool:
@@ -50,14 +53,15 @@ stages:
       - group: Az connection settings
       steps:
       - download: current
-        artifact: OnboardingFile
+        artifact: RulesFile
       - download: Scripts
         patterns: '*.ps1'
       - task: AzurePowerShell@4
-        displayName: 'Install Sentinel'
+        displayName: 'Create and Update Alert Rules'
         inputs:
          azureSubscription: 'Soricloud Visual Studio'
-         ScriptPath: '$(Pipeline.Workspace)/Scripts/Scripts/InstallSentinel.ps1'
-         ScriptArguments: '-OnboardingFile onboarding.json'
+         ScriptPath: '$(Pipeline.Workspace)/Scripts/Scripts/CreateAnalyticsRules.ps1'
+         ScriptArguments: '-Workspace $(Workspace) -RulesFile analytics-rules.json'
          azurePowerShellVersion: LatestVersion
          pwsh: true
+
