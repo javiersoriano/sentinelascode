@@ -1,105 +1,84 @@
-  
 {
-    "analytics": [
-      {
-        "kind": "Scheduled",
-        "displayName": "AlertRule01",
-        "description": "test",
-        "severity": "Low",
-        "enabled": true,
-        "query": "let starttime = 14d;
-        let endtime = 1d;
-        // The number of operations below which an IP address is considered an unusual source of role assignment operations
-        let alertOperationThreshold = 5;
-        let createRoleAssignmentActivity = AzureActivity
-        | where OperationName == \"Create role assignment\";
-        createRoleAssignmentActivity
-        | where TimeGenerated between (ago(starttime) .. ago(endtime))
-        | summarize count() by CallerIpAddress, Caller
-        | where count_ >= alertOperationThreshold
-        | join kind = rightanti (
-        createRoleAssignmentActivity
-        | where TimeGenerated > ago(endtime)
-        | summarize StartTimeUtc = min(TimeGenerated), EndTimeUtc = max(TimeGenerated), ActivityTimeStamp = makelist(TimeGenerated), ActivityStatus = makelist(ActivityStatus),
-        OperationIds = makelist(OperationId), CorrelationId = makelist(CorrelationId), ActivityCountByCallerIPAddress = count()
-        by ResourceId, CallerIpAddress, Caller, OperationName, Resource, ResourceGroup
-        ) on CallerIpAddress, Caller
-        | extend timestamp = StartTimeUtc, AccountCustomEntity = Caller, IPCustomEntity = CallerIpAddress",
-        "queryFrequency": "5H",
-        "queryPeriod": "5H",
-        "triggerOperator": "GreaterThan",
-        "triggerThreshold": 5,
-        "suppressionDuration": "6H",
-        "suppressionEnabled": false,
-        "tactics": [
-          "Persistence",
-          "LateralMovement",
-          "Collection"
-        ],
-        "playbookName": ""
-      },
-      {
-        "kind": "Scheduled",
-        "displayName": "AlertRule02",
-        "description": "test",
-        "severity": "High",
-        "enabled": true,
-        "query": "SecurityEvent | where EventID == \"4688\" | where CommandLine contains \"-noni -ep bypass $\"",
-        "queryFrequency": "5H",
-        "queryPeriod": "6H",
-        "triggerOperator": "GreaterThan",
-        "triggerThreshold": 5,
-        "suppressionDuration": "6H",
-        "suppressionEnabled": false,
-        "tactics": [
-          "Persistence",
-          "LateralMovement"
-        ],
-        "playbookName": ""
-      },
-      {
-        "kind": "Scheduled",
-        "displayName": "Rule01-04-09 Suspicious activity",
-        "description": "test",
-        "severity": "High",
-        "enabled": true,
-        "query": "SecurityEvent | where EventID == \"4688\" | where CommandLine contains \"-noni -ep bypass $\"",
-        "queryFrequency": "5H",
-        "queryPeriod": "6H",
-        "triggerOperator": "GreaterThan",
-        "triggerThreshold": 5,
-        "suppressionDuration": "6H",
-        "suppressionEnabled": false,
-        "tactics": [
-          "Persistence",
-          "LateralMovement"
-        ],
-        "playbookName": ""
-      },
-      {
-        "kind": "MicrosoftSecurityIncidentCreation",
-        "displayName": "Create incidents based on Azure Active Directory Identity Protection alerts",
-        "description": "Create incidents based on all alerts generated in Azure Active Directory Identity Protection",
-        "enabled": true,
-        "productFilter": "Microsoft Cloud App Security",
-        "severitiesFilter": [
-          "High",
-          "Medium",
-          "Low"
-        ],
-        "displayNamesFilter": null
-      },
-      {
-        "kind": "Fusion",
-        "displayName": "Advanced Multistage Attack Detection",
-        "enabled": true,
-        "alertRuleTemplateName": "f71aba3d-28fb-450b-b192-4e76a83015c8"
-      },
-      {
-        "kind": "MLBehaviorAnalytics",
-        "displayName": "(Preview) Anomalous SSH Login Detection",
-        "enabled": true,
-        "alertRuleTemplateName": "fa118b98-de46-4e94-87f9-8e6d5060b60b"
+  "Scheduled": [
+    {
+      "displayName": "AlertRule01",
+      "description": "",
+      "severity": "Medium",
+      "enabled": true,
+      "query": "SecurityEvent | where EventID == \"4688\" | where CommandLine contains \"-noni -ep bypass $\"",
+      "queryFrequency": "5H",
+      "queryPeriod": "6H",
+      "triggerOperator": "GreaterThan",
+      "triggerThreshold": 5,
+      "suppressionDuration": "6H",
+      "suppressionEnabled": false,
+      "tactics": [
+        "Persistence",
+        "LateralMovement",
+        "Collection"
+      ],
+      "playbookName": "Playbook01",
+      "aggregationKind": "SingleAlert",
+      "createIncident": true,
+      "groupingConfiguration": {
+        "enabled": false,
+        "reopenClosedIncident": false,
+        "lookbackDuration": "PT5H",
+        "entitiesMatchingMethod": "All",
+        "groupByEntities": [
+          "Account",
+          "Ip",
+          "Host",
+          "Url"
+        ]
       }
-    ]
-  }
+    },
+    {
+      "displayName": "AlertRule02",
+      "description": "",
+      "severity": "Medium",
+      "enabled": true,
+      "query": "SecurityEvent | where EventID == \"4688\" | where CommandLine contains \"-noni -ep bypass $\"",
+      "queryFrequency": "5H",
+      "queryPeriod": "6H",
+      "triggerOperator": "GreaterThan",
+      "triggerThreshold": 5,
+      "suppressionDuration": "6H",
+      "suppressionEnabled": false,
+      "tactics": [
+        "Persistence",
+        "LateralMovement",
+        "Collection"
+      ],
+      "playbookName": "Playbook01"
+    }
+  ],
+  "Fusion": [
+    {
+      "displayName": "Advanced Multistage Attack Detection",
+      "enabled": true,
+      "alertRuleTemplateName": "f71aba3d-28fb-450b-b192-4e76a83015c8"
+    }
+  ],
+  "MLBehaviorAnalytics": [
+    {
+      "displayName": "(Preview) Anomalous SSH Login Detection",
+      "enabled": true,
+      "alertRuleTemplateName": "fa118b98-de46-4e94-87f9-8e6d5060b60b"
+    }
+  ],
+  "MicrosoftSecurityIncidentCreation": [
+    {
+      "displayName": "Create incidents based on Azure Active Directory Identity Protection alerts",
+      "description": "Create incidents based on all alerts generated in Azure Active Directory Identity Protection",
+      "enabled": true,
+      "productFilter": "Microsoft Cloud App Security",
+      "severitiesFilter": [
+        "High",
+        "Medium",
+        "Low"
+      ],
+      "displayNamesFilter": null
+    }
+  ]
+}
