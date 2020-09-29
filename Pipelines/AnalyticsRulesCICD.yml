@@ -10,7 +10,7 @@ trigger:
  branches: 
    include:
    - development
-   exclue:
+   exclude:
    - master
  paths:
    include:
