@@ -7,11 +7,6 @@ resources:
    - pipeline: Scripts
      source: 'scriptsCI'
 trigger:
- branches: 
-   include:
-   - development
-   exclude:
-   - master
  paths:
    include:
      - AnalyticsRules/*
