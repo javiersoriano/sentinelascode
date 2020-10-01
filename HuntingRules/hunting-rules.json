@@ -6,7 +6,8 @@
       "query": "SecurityEvent | where EventID == \"4688\" | where CommandLine contains \"-noni -ep bypass $\"",
       "tactics": [
         "Persistence",
-        "LateralMovement"
+        "LateralMovement",
+        "Exfiltration"
       ]
     },
     {
