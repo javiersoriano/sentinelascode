@@ -26,11 +26,11 @@ foreach ($rule in $rules.hunting) {
     if ($existingRule) {
         Write-Host "Hunting rule $($rule.displayName) already exists. Updating..."
 
-        New-AzSentinelHuntingRule -WorkspaceName $Workspace -DisplayName $rule.displayName -Query $rule.query -Description $rule.description -Tactics $rule.tactics
+        New-AzSentinelHuntingRule -WorkspaceName $Workspace -DisplayName $rule.displayName -Query $rule.query -Description $rule.description -Tactics $rule.tactics -confirm:$false
     }
     else {
         Write-Host "Hunting rule $($rule.displayName) doesn't exist. Creating..."
 
-        New-AzSentinelHuntingRule -WorkspaceName $Workspace -DisplayName $rule.displayName -Query $rule.query -Description $rule.description -Tactics $rule.tactics
+        New-AzSentinelHuntingRule -WorkspaceName $Workspace -DisplayName $rule.displayName -Query $rule.query -Description $rule.description -Tactics $rule.tactics -confirm:$false
     }
 }
