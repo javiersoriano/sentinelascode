@@ -72,7 +72,7 @@
       "displayName": "Create incidents based on Azure Active Directory Identity Protection alerts",
       "description": "Create incidents based on all alerts generated in Azure Active Directory Identity Protection",
       "enabled": true,
-      "productFilter": "Microsoft Cloud App Security",
+      "productFilter": "Azure Active Directory Identity Protection",
       "severitiesFilter": [
         "High",
         "Medium",
