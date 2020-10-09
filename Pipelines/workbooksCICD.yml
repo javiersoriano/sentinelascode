@@ -59,7 +59,7 @@ stages:
         inputs:
          azureSubscription: 'Soricloud Visual Studio'
          ScriptPath: '$(Pipeline.Workspace)/Scripts/Scripts/CreateWorkbooks.ps1'
-         ScriptArguments: '-ResourceGroup $(ResourceGroup) -WorkbooksFolder $(Pipeline.Workspace)/Workbooks -WorkbookSourceId $(workbookSourceId)'
+         ScriptArguments: '-SubscriptionId $(SubscriptionId) -ResourceGroup $(ResourceGroup) -Workspace $(Workspace) -WorkbooksFolder $(Pipeline.Workspace)/Workbooks'
          azurePowerShellVersion: LatestVersion
          pwsh: true
 
