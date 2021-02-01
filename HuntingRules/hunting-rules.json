@@ -3,11 +3,11 @@
     {
       "displayName": "HuntingRule01",
       "description": "test",
-      "query": "SecurityEvent | where EventID == \"4689\" | where CommandLine contains \"-noni -ep bypass $\"",
+      "query": "SecurityEvent | where EventID == \"4688\" | where CommandLine contains \"-noni -ep bypass $\"",
       "tactics": [
         "Persistence",
         "LateralMovement",
-        "Exfiltration"
+        "Collection"
       ]
     },
     {
