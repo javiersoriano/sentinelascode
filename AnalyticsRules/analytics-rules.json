@@ -6,7 +6,7 @@
       "severity": "Medium",
       "enabled": true,
       "query": "SecurityEvent | where EventID == \"4688\" | where CommandLine contains \"-noni -ep bypass $\"",
-      "queryFrequency": "5H",
+      "queryFrequency": "4H",
       "queryPeriod": "6H",
       "triggerOperator": "GreaterThan",
       "triggerThreshold": 5,
