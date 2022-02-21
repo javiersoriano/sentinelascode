@@ -50,7 +50,7 @@ stages:
       - task: AzurePowerShell@4
         displayName: 'Create and Update Analytics RUles'
         inputs:
-         azureSubscription: 'Soricloud Visual Studio'
+         azureSubscription: 'soricloud-testlab04'
          ScriptPath: '$(Pipeline.Workspace)/Scripts/Scripts/DeploySentinelArtifacts.ps1'
          ScriptArguments: '-ResourceGroup $(ResourceGroup) -Folder $(Pipeline.Workspace)/AnalyticsRules -Workspace $(Workspace)'
          azurePowerShellVersion: LatestVersion
