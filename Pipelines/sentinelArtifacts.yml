@@ -52,6 +52,6 @@ stages:
         inputs:
          azureSubscription: 'soricloud-testlab04'
          ScriptPath: '$(Pipeline.Workspace)/Scripts/Scripts/DeploySentinelArtifacts.ps1'
-         ScriptArguments: '-ResourceGroup $(ResourceGroup) -Folder $(Pipeline.Workspace)\AnalyticsRules -Workspace $(Workspace)'
+         ScriptArguments: '-ResourceGroup $(ResourceGroup) -Folder $(Pipeline.Workspace)\Analytics -Workspace $(Workspace)'
          azurePowerShellVersion: LatestVersion
          pwsh: true
