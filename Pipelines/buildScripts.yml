@@ -15,13 +15,6 @@ steps:
   inputs:
     SourceFolder: Scripts
     TargetFolder: '$(build.artifactstagingdirectory)'
-- task: Files-Validator@1
-  inputs:
-    rootDir: '$(build.artifactstagingdirectory)/*.ps1'
-    validateXML: false
-    validateJSON: false
-    validateYAML: false
-    validatePS: true
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Pipeline Artifact'
   inputs:

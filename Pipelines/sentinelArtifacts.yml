@@ -7,7 +7,7 @@ name: build and deploy Analytics Rules
 resources:
  pipelines:
    - pipeline: Scripts
-     source: 'scriptsCI'
+     source: 'Build Scripts'
 
 trigger:
  paths:
@@ -21,20 +21,13 @@ stages:
     - job: AgentJob
       pool:
        name: Azure Pipelines
-       vmImage: 'vs2017-win2016'
+       vmImage: 'windows-2019'
       steps:
        - task: CopyFiles@2
          displayName: 'Copy Analytics'
          inputs:
-          SourceFolder: Playbooks
+          SourceFolder: AnalyticsRules
           TargetFolder: '$(Pipeline.Workspace)'
-       - task: Files-Validator@1
-         inputs:
-           rootDir: '$(Pipeline.Workspace)/*.json'
-           validateXML: false
-           validateJSON: true
-           validateYAML: false
-           validatePS: false
        - task: PublishBuildArtifacts@1
          displayName: 'Publish Artifact: Analytics'
          inputs:
@@ -55,10 +48,10 @@ stages:
       - download: Scripts
         patterns: '*.ps1'
       - task: AzurePowerShell@4
-        displayName: 'Create and Update Analytics RUles'
+        displayName: 'Create and Update Analytics Rules'
         inputs:
-         azureSubscription: 'Soricloud Visual Studio'
+         azureSubscription: 'soricloud-testlab04'
          ScriptPath: '$(Pipeline.Workspace)/Scripts/Scripts/DeploySentinelArtifacts.ps1'
-         ScriptArguments: '-ResourceGroup $(ResourceGroup) -Folder $(Pipeline.Workspace)/AnalyticsRules -Workspace $(Workspace)'
+         ScriptArguments: '-ResourceGroup $(ResourceGroup) -Folder $(Pipeline.Workspace)\Analytics -Workspace $(Workspace)'
          azurePowerShellVersion: LatestVersion
          pwsh: true
