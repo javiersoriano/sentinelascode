@@ -50,21 +50,6 @@
                 "customDetails": null,
                 "entityMappings": null
             }
-        },
-        {
-            "id": "[concat(resourceId('Microsoft.OperationalInsights/workspaces/providers', parameters('workspace'), 'Microsoft.SecurityInsights'),'/alertRules/387a91e8-7179-11eb-b587-029778b6f45f/actions/1c991bcd7a0e425584c7c1e3f6613bed')]",
-            "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/387a91e8-7179-11eb-b587-029778b6f45f/1c991bcd7a0e425584c7c1e3f6613bed')]",
-            "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules/actions",
-            "apiVersion": "2021-09-01-preview",
-            "properties": {
-                "ruleId": "[concat(resourceId('Microsoft.OperationalInsights/workspaces/providers', parameters('workspace'), 'Microsoft.SecurityInsights'),'/alertRules/387a91e8-7179-11eb-b587-029778b6f45f')]",
-                "triggerUri": "[listCallbackURL(concat('/subscriptions/1c61ccbf-70b3-45a3-a1fb-848ce46d70a6/resourceGroups/Admin/providers/Microsoft.Logic/workflows/new-inc-notification','/triggers/When_a_response_to_an_Azure_Sentinel_alert_is_triggered'),'2016-06-01').value]",
-                "logicAppResourceId": "/subscriptions/1c61ccbf-70b3-45a3-a1fb-848ce46d70a6/resourceGroups/Admin/providers/Microsoft.Logic/workflows/new-inc-notification",
-                "operatesOn": "Alert"
-            },
-            "dependsOn": [
-                "[concat(resourceId('Microsoft.OperationalInsights/workspaces/providers', parameters('workspace'), 'Microsoft.SecurityInsights'),'/alertRules/387a91e8-7179-11eb-b587-029778b6f45f')]"
-            ]
         }
     ]
 }
