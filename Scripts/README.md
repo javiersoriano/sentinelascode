@@ -1,29 +1,12 @@
 # Scripts
 
-## Analytics Rules deployment script (CreateAnalyticsRules.ps1) - NEW
+## Sentinel artifacts deployment script (DeploySentinelArtifacts.ps1)
 
-Reads the config file in the AnalyticsRules folder and deploys its contents to a specific environment. The script will detect if the alert is brand new and needs to be created or if the alert is already active and just needs to be updated. The script also supports attaching a playbook to the rule.
-
-### Syntax 
-
-`CreateAnalyticsRules.ps1 -Workspace <String> -RulesFile <String>`
-
-
-## Hunting Rules deployment script (CreateHuntingRulesAPI.ps1)
-
-Reads the config file in the HuntingRules folder and deploys its contents to a specific environment. The script will detect if the hunting rule is brand new and needs to be created or if it's already active and just needs to be updated.
+This script deploys Analytics Rules, Automation Rules, Watchlists, Hunting Queries and Parsers. The script takes all the ARM templates in the specified folder and deploys them into the given resource group and workspace.
 
 ### Syntax
 
-`CreateHuntingRulesAPI.ps1 -Workspace <String> -RulesFile <String>`
-
-## Connectors deployment script (CreateAnalyticsRulesAPI.ps1) - OLD
-
-Reads the config file in the Connectors folder and deploys its contents to a specific environment. 
-
-### Syntax 
-
-`EnableConnectorsAPI.ps1 -TenantId <String> -ClientId <String> -ClientSecret <String> -SubscriptionId <String> -ResourceGroup <String> -Workspace <String> -ConnectorsFile <String>`
+`CreatePlaybooks.ps1 -ResourceGroup <String> -Folder <String> -Workspace <String>`
 
 ## Playbooks deployment script (CreatePLaybooks.ps1)
 
@@ -48,11 +31,3 @@ Reads configuration file under Onboard folder and installs SecurityInsights (Sen
 ### Syntax
 
 `InstallSentinel.ps1 -OnboardingFile <String>`
-
-## Alert Rules deployment script (CreateAnalyticsRulesAPI.ps1) - OLD
-
-Reads the config file in the AnalyticsRules folder and deploys its contents to a specific environment. The script will detect if the alert is brand new and needs to be created or if the alert is already active and just needs to be updated. Currently this script doesn't support attaching a playbook to an alert rule.
-
-### Syntax 
-
-`CreateAnalyticsRulesAPI.ps1 -TenantId <String> -ClientId <String> -ClientSecret <String> -SubscriptionId <String> -ResourceGroup <String> -Workspace <String> -RulesFile <String>`

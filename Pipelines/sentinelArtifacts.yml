@@ -1,0 +1,64 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+name: build and deploy Analytics Rules
+resources:
+ pipelines:
+   - pipeline: Scripts
+     source: 'scriptsCI'
+
+trigger:
+ paths:
+   include:
+     - AnalyticsRules/*
+
+stages:
+- stage: build_analytics
+
+  jobs:
+    - job: AgentJob
+      pool:
+       name: Azure Pipelines
+       vmImage: 'vs2017-win2016'
+      steps:
+       - task: CopyFiles@2
+         displayName: 'Copy Analytics'
+         inputs:
+          SourceFolder: Playbooks
+          TargetFolder: '$(Pipeline.Workspace)'
+       - task: Files-Validator@1
+         inputs:
+           rootDir: '$(Pipeline.Workspace)/*.json'
+           validateXML: false
+           validateJSON: true
+           validateYAML: false
+           validatePS: false
+       - task: PublishBuildArtifacts@1
+         displayName: 'Publish Artifact: Analytics'
+         inputs:
+          PathtoPublish: '$(Pipeline.Workspace)'
+          ArtifactName: Analytics
+
+- stage: deploy_analytics
+  jobs:
+    - job: AgentJob
+      pool:
+       name: Azure Pipelines
+       vmImage: 'windows-2019'
+      variables: 
+      - group: Az connection settings
+      steps:
+      - download: current
+        artifact: Analytics
+      - download: Scripts
+        patterns: '*.ps1'
+      - task: AzurePowerShell@4
+        displayName: 'Create and Update Analytics RUles'
+        inputs:
+         azureSubscription: 'Soricloud Visual Studio'
+         ScriptPath: '$(Pipeline.Workspace)/Scripts/Scripts/DeploySentinelArtifacts.ps1'
+         ScriptArguments: '-ResourceGroup $(ResourceGroup) -Folder $(Pipeline.Workspace)/AnalyticsRules -Workspace $(Workspace)'
+         azurePowerShellVersion: LatestVersion
+         pwsh: true

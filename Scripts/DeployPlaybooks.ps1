@@ -1,5 +1,5 @@
 param(
-    [Parameter(Mandatory=$true)]$resourceGroup,
+    [Parameter(Mandatory=$true)]$ResourceGroup,
     [Parameter(Mandatory=$true)]$PlaybooksFolder
 )
 
@@ -7,11 +7,11 @@ Write-Host "Folder is: $($PlaybooksFolder)"
 
 $armTemplateFiles = Get-ChildItem -Path $PlaybooksFolder -Filter *.json
 
-Write-Host "Files are: " $armTemplateFiles
+Write-Host "Files are: " $ArmTemplateFiles
 
-foreach ($armTemplate in $armTemplateFiles) {
+foreach ($ArmTemplate in $ArmTemplateFiles) {
     try {
-        New-AzResourceGroupDeployment -ResourceGroupName $resourceGroup -TemplateFile $armTemplate 
+        New-AzResourceGroupDeployment -ResourceGroupName $ResourceGroup -TemplateFile $ArmTemplate 
     }
     catch {
         $ErrorMessage = $_.Exception.Message
