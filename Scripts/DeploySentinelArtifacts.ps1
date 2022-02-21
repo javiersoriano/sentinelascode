@@ -12,7 +12,7 @@ Write-Host "Files are: " $ArmTemplateFiles
 
 foreach ($ArmTemplate in $ArmTemplateFiles) {
     try {
-        New-AzResourceGroupDeployment -ResourceGroupName $ResourceGroup -TemplateFile $ArmTemplate -WorkspaceName $Workspace
+        New-AzResourceGroupDeployment -ResourceGroupName $ResourceGroup -TemplateFile $ArmTemplate -Workspace $Workspace
     }
     catch {
         $ErrorMessage = $_.Exception.Message
