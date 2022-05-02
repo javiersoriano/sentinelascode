@@ -1,8 +1,8 @@
 [![Build Status](https://soricloud.visualstudio.com/SentinelAsCode/_apis/build/status/scriptsCI?branchName=master)](https://soricloud.visualstudio.com/SentinelAsCode/_build/latest?definitionId=23&branchName=master)
 
-# Azure Sentinel as Code
+# Microsoft Sentinel as Code
 
-The purpose of this project is to provide tools to enable automatic deployment of Azure Sentinel environments through Azure DevOps.
+The purpose of this project is to provide tools to enable automatic deployment of Microsoft Sentinel environments through Azure DevOps.
 
 A blog post explaining more about this project is available at [Deploying and Managing Azure Sentinel as code](https://techcommunity.microsoft.com/t5/azure-sentinel/deploying-and-managing-azure-sentinel-as-code/ba-p/1131928)
 
@@ -18,7 +18,7 @@ YAML files that define the CI/CD pipelines that can be used to automated the dep
 
 ## Onboard
 
-Automating the installation of Azure Sentinel on one or more workspaces as defined in config file under Onboard
+Automating the installation of Microsoft Sentinel on one or more workspaces as defined in config file under Onboard
 
 ## Connectors
 
