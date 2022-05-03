@@ -2,6 +2,8 @@
 
 # Azure Sentinel as Code
 
+**This reposiroty is no longer maintained. The new to distribute content as code is [Microsoft Sentinel Repositories](https://docs.microsoft.com/en-us/azure/sentinel/ci-cd?tabs=github).**
+
 The purpose of this project is to provide tools to enable automatic deployment of Azure Sentinel environments through Azure DevOps.
 
 A blog post explaining more about this project is available at [Deploying and Managing Azure Sentinel as code](https://techcommunity.microsoft.com/t5/azure-sentinel/deploying-and-managing-azure-sentinel-as-code/ba-p/1131928)
